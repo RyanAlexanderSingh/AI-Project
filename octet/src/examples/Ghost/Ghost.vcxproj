@@ -215,8 +215,9 @@
     <ClInclude Include="..\..\shaders\shader.h" />
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
-    <ClInclude Include="ai_game.h" />
-    <ClInclude Include="Planet.h" />
+    <ClInclude Include="ghost.h" />
+    <ClInclude Include="planet.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl" />
