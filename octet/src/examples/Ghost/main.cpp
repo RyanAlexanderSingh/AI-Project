@@ -11,7 +11,8 @@
 
 #include "../../octet.h"
 
-#include "Ghost.h"
+#include "ai_game.h"
+#include "Player.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -19,7 +20,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::Ghost app(argc, argv);
+  octet::ai_game app(argc, argv);
   app.init();
 
   // open windows

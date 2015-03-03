@@ -6,12 +6,12 @@
 //
 namespace octet {
   /// Scene containing a box with octet.
-  class Ghost : public app {
+  class ai_game : public app {
     // scene for drawing box
     ref<visual_scene> app_scene;
   public:
     /// this is called when we construct the class before everything is initialised.
-    Ghost(int argc, char **argv) : app(argc, argv) {
+    ai_game(int argc, char **argv) : app(argc, argv) {
     }
 
     /// this is called once OpenGL is initialized
