@@ -11,9 +11,9 @@
 
 #include "../../octet.h"
 
+#include "inputs.h"
 #include "ghost.h"
 #include "planet.h"
-#include "inputs.h"
 #include "player.h"
 
 int main(int argc, char **argv) {

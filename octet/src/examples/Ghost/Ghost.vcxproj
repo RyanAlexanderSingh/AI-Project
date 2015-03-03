@@ -216,6 +216,7 @@
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
     <ClInclude Include="ghost.h" />
+    <ClInclude Include="inputs.h" />
     <ClInclude Include="planet.h" />
     <ClInclude Include="player.h" />
   </ItemGroup>

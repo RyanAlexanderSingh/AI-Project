@@ -14,13 +14,37 @@ namespace octet {
   ///They are attached using hinge constraints. There are 2 hinge constraint relationships, Chassis-Axils and Axils-Wheels.
   class inputs : public resource {
 
-
   public:
 
     inputs()
     {
     }
 
+    app *the_app;
+    void init(app *app){
+      this->the_app = app;
+    }
+
+    void update(mat4t &camera){
+      //check for keyboard inputs
+      keyboard_inputs();
+      //mouse inputs
+      mouse_inputs();
+    }
+
+    void mouse_inputs(){
+      
+    }
+
+    void keyboard_inputs(){
+      //exit the program
+      if (the_app->is_key_down(key_esc)){
+        exit(1);
+      }
+    }
+
+
+    //check if we need deconstructor
     ~inputs() {
     }
   };

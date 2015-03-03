@@ -430,6 +430,7 @@
     <ClInclude Include="ghost.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="planet.h" />
+    <ClInclude Include="inputs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">
