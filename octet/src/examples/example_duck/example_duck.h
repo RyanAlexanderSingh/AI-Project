@@ -21,7 +21,7 @@ namespace octet {
       app_scene =  new visual_scene();
 
       resource_dict dict;
-      if (!loader.load_xml("assets/duck_triangulate.dae")) {
+      if (!loader.load_xml("assets/ship.dae")) {
         // failed to load file
         return;
       }

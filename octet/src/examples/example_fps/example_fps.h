@@ -48,6 +48,7 @@ namespace octet {
     example_fps(int argc, char **argv) : app(argc, argv) {
     }
 
+
     /// this is called once OpenGL is initialized
     void app_init() {
       mouse_look_helper.init(this, 200.0f / 360.0f, false);

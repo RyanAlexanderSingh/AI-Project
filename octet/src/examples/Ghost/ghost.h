@@ -16,6 +16,10 @@ namespace octet {
     // scene for drawing box
 
     inputs inputs;
+    mouse_look mouse_look_helper;
+    helper_fps_controller fps_helper;
+
+    ref<camera_instance> the_camera;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
@@ -26,36 +30,6 @@ namespace octet {
     btDiscreteDynamicsWorld *world; /// physics world, contains rigid bodies
 
     vec2 camAngle = (0.0f, 0.0f);
-
-    ///this function is responsible for moving the camera based on mouse position
-    void move_camera(int x, int y, HWND *w)
-    {
-      static bool is_mouse_moving = true;
-
-      if (is_mouse_moving){
-        int vx, vy;
-        get_viewport_size(vx, vy);
-        float dx = x - vx * 0.5f;
-        float dy = y - vy * 0.5f;
-
-        //apply the deltaX and deltaY of the mouse to the camera angles.
-        const float sensitivity = -0.5f;
-        camAngle.x() += dx * sensitivity;
-        camAngle.y() += dy * sensitivity;
-        is_mouse_moving = false;
-
-        //set the position of the mouse to the center of the window
-        tagPOINT p;
-        p.x = vx / 2;
-        p.y = vy / 2;
-        ClientToScreen(*w, &p);
-        SetCursorPos(p.x, p.y);
-      }
-      else
-      {
-        is_mouse_moving = true;
-      }
-    }
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -77,17 +51,15 @@ namespace octet {
 
       //hide the cursor
       ShowCursor(false);
-
+      mouse_look_helper.init(this, 200.0f / 360.0f, false);
       //set gravity for the world
       world->setGravity(btVector3(0.0f, 0.0f, 0.0f));
 
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
-
-      //setup the camera
-      app_scene->get_camera_instance(0)->set_far_plane(20000);
-      mat4t &camera_mat = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();
-      camera_mat.translate(vec3(0, 10, 0));
+      the_camera = app_scene->get_camera_instance(0);
+      the_camera->get_node()->translate(vec3(0, 4, 0));
+      the_camera->set_far_plane(10000);
 
       inputs.init(this);
      
@@ -104,18 +76,17 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
+      scene_node *camera_node = the_camera->get_node();
+      mat4t &camera_to_world = camera_node->access_nodeToParent();
+      mouse_look_helper.update(camera_to_world);
+
       // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
 
+      inputs.update();
+
       // draw the scene
       app_scene->render((float)vx / vy);
-
-      scene_node *cameraNode = app_scene->get_camera_instance(0)->get_node();
-      mat4t &cameraMatrix = cameraNode->access_nodeToParent();
-      cameraNode->loadIdentity();
-      cameraMatrix.translate(-30, 14, 0);
-        cameraMatrix.rotateY(camAngle.x());
-        cameraMatrix.rotateX(camAngle.y());
 
       
     }

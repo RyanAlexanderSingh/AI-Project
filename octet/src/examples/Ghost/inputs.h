@@ -25,7 +25,7 @@ namespace octet {
       this->the_app = app;
     }
 
-    void update(mat4t &camera){
+    void update(){
       //check for keyboard inputs
       keyboard_inputs();
       //mouse inputs
