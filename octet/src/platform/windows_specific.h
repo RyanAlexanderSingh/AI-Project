@@ -192,6 +192,9 @@ namespace octet {
       ScreenToClient(window_handle, &mouse_pos);
       set_mouse_pos(mouse_pos.x, mouse_pos.y);
 
+      //set the window handle
+      set_window_handle(window_handle);
+
       RECT rect;
       GetClientRect(window_handle, &rect);
       set_viewport_size(rect.right - rect.left, rect.bottom - rect.top);

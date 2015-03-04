@@ -41,7 +41,6 @@ namespace octet {
     /// this is called once OpenGL is initialized
     void app_init() {
 
-
       //hide the cursor
       ShowCursor(false);
       mouse_look_helper.init(this, 200.0f / 360.0f, false);
@@ -51,27 +50,31 @@ namespace octet {
 
       app_scene = new visual_scene();
 
-      resource_dict dict;
-      if (!loader.load_xml("assets/test_ship.dae")) {
-        // failed to load file
-        return;
+      
+      if (!loader.load_xml("assets/SpaceShip.dae")) {
+        printf("failed to load file!\n");
+        exit(1);
       }
+      resource_dict dict;
       loader.get_resources(dict);
 
       dynarray<resource*> meshes;
       dict.find_all(meshes, atom_mesh);
 
-      if (meshes.size()) {
-        material *mat = new material(new image("assets/test_ship.jpg"));
-        //material *mat = new material(vec4(0, 0, 0, 1));
+      if (meshes.size()) {     
         mesh *player_ship = meshes[0]->get_mesh();
-        scene_node *node = new scene_node();
-        node->translate(vec3(0, 500, 0));
-        app_scene->add_child(node);
-        app_scene->add_mesh_instance(new mesh_instance(node, player_ship, mat));
-        //player_node = app_scene->get_mesh_instance(0)->get_node();
-        player_node = node;
+        mat4t location;
+        location.translate(vec3(0, 200, 0));
+        material *mat = new material(new image("assets/playerShip_uv.jpg"));
+        app_scene->add_shape(location, player_ship, mat, true);
+        player_node = app_scene->get_mesh_instance(0)->get_node();
       }
+
+      //mesh_instance *mi = app_scene->add_shape(
+      //   mat,
+
+
+      //  )
 
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
@@ -106,8 +109,6 @@ namespace octet {
 
       // draw the scene
       app_scene->render((float)vx / vy);
-
-
     }
   };
 }

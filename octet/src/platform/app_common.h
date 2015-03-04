@@ -79,6 +79,7 @@ namespace octet {
     int viewport_y;
     int frame_number;
     bool is_gles3;
+    HWND window_handle;
     video_capture video_capture_;
 
     // queue of files to load
@@ -156,6 +157,10 @@ namespace octet {
       return mouse_wheel;
     }
 
+    void get_handle(HWND &w) {
+      w = window_handle;
+    }
+
     void get_viewport_size(int &x, int &y) {
       x = viewport_x;
       y = viewport_y;
@@ -190,6 +195,11 @@ namespace octet {
     void set_mouse_pos(int x, int y) {
       mouse_x = x;
       mouse_y = y;
+    }
+
+    //just give us back the window handle
+    void set_window_handle(HWND w){
+      window_handle = w;
     }
 
     // we may recieve several WM_INPUT messages during the frame,
