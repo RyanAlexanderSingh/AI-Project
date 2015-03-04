@@ -111,7 +111,7 @@ namespace octet {
 
     virtual void draw_world(int x, int y, int w, int h) = 0;
     virtual void app_init() = 0;
-    //virtual void move_camera(int x, int y, HWND *w) = 0;
+    virtual void move_camera(int x, int y, HWND *w) = 0;
 
     /// returns true if a key is down
     bool is_key_down(unsigned key) {
@@ -157,7 +157,7 @@ namespace octet {
       return mouse_wheel;
     }
 
-    void get_handle(HWND &w) {
+    void get_window_handle(HWND &w) {
       w = window_handle;
     }
 
@@ -201,6 +201,7 @@ namespace octet {
     void set_window_handle(HWND w){
       window_handle = w;
     }
+
 
     // we may recieve several WM_INPUT messages during the frame,
     // so accumulate.

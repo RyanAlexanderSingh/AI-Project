@@ -28,8 +28,37 @@ namespace octet {
 
     // scene for drawing box
     ref<visual_scene> app_scene;
+    vec2 camAngle = (0.0f, 0.0f); //vec2 to store x and y pos of camera angle.
 
-    vec2 camAngle = (0.0f, 0.0f);
+    ///this function is responsible for moving the camera based on mouse position
+    void move_camera(int x, int y, HWND *w)
+    {
+      static bool is_mouse_moving = true;
+
+      if (is_mouse_moving){
+        int vx, vy;
+        get_viewport_size(vx, vy);
+        float dx = x - vx * 0.5f;
+        float dy = y - vy * 0.5f;
+
+        //apply the deltaX and deltaY of the mouse to the camera angles.
+        const float sensitivity = -0.5f;
+        camAngle.x() += dx * sensitivity;
+        camAngle.y() += dy * sensitivity;
+        is_mouse_moving = false;
+
+        //set the position of the mouse to the center of the window
+        tagPOINT p;
+        p.x = vx * 0.5f;
+        p.y = vy * 0.5f;
+        ClientToScreen(*w, &p);
+        SetCursorPos(p.x, p.y);
+      }
+      else
+      {
+        is_mouse_moving = true;
+      }
+    }
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -43,7 +72,7 @@ namespace octet {
 
       //hide the cursor
       ShowCursor(false);
-      mouse_look_helper.init(this, 200.0f / 360.0f, false);
+      //mouse_look_helper.init(this, 200.0f / 360.0f, false);
       fps_helper.init(this);
       //set gravity for the world
       //world->setGravity(btVector3(0.0f, 0.0f, 0.0f));
@@ -98,7 +127,11 @@ namespace octet {
 
       scene_node *camera_node = the_camera->get_node();
       mat4t &camera_to_world = camera_node->access_nodeToParent();
-      mouse_look_helper.update(camera_to_world);
+      //mouse_look_helper.update(camera_to_world);
+
+      camera_to_world.loadIdentity();
+      camera_to_world.rotateY(camAngle.x());
+      camera_to_world.rotateX(camAngle.y());
 
       fps_helper.update(player_node, camera_node);
 

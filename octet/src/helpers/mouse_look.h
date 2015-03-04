@@ -20,6 +20,7 @@ namespace octet { namespace helpers {
       invert_mouse = false;
       mouse_center_x = 0;
       mouse_center_y = 0;
+      
     }
 
     void init(app *the_app, float sensitivity, bool invert_mouse) {
@@ -54,11 +55,16 @@ namespace octet { namespace helpers {
 
       int rx = 0, ry = 0;
       the_app->get_absolute_mouse_movement(rx, ry);
+
+      int vx, vy;
+      the_app->get_viewport_size(vx, vy);
+
       float angle_x = (float)(mouse_center_x - rx) * sensitivity;
       float angle_y = (float)(mouse_center_y - ry) * sensitivity;
       angle_y = std::max(-90.0f, std::min(angle_y, 90.0f));
       cameraToWorld.rotateY(angle_x);
       cameraToWorld.rotateX(invert_mouse ? -angle_y : angle_y);
+      
     }
   };
 }}
