@@ -28,37 +28,6 @@ namespace octet {
 
     // scene for drawing box
     ref<visual_scene> app_scene;
-    vec2 camAngle = (0.0f, 0.0f); //vec2 to store x and y pos of camera angle.
-
-    ///this function is responsible for moving the camera based on mouse position
-    void move_camera(int x, int y, HWND *w)
-    {
-      static bool is_mouse_moving = true;
-
-      if (is_mouse_moving){
-        int vx, vy;
-        get_viewport_size(vx, vy);
-        float dx = x - vx * 0.5f;
-        float dy = y - vy * 0.5f;
-
-        //apply the deltaX and deltaY of the mouse to the camera angles.
-        const float sensitivity = -0.5f;
-        camAngle.x() += dx * sensitivity;
-        camAngle.y() += dy * sensitivity;
-        is_mouse_moving = false;
-
-        //set the position of the mouse to the center of the window
-        tagPOINT p;
-        p.x = vx * 0.5f;
-        p.y = vy * 0.5f;
-        ClientToScreen(*w, &p);
-        SetCursorPos(p.x, p.y);
-      }
-      else
-      {
-        is_mouse_moving = true;
-      }
-    }
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -72,14 +41,13 @@ namespace octet {
 
       //hide the cursor
       ShowCursor(false);
-      //mouse_look_helper.init(this, 200.0f / 360.0f, false);
+      mouse_look_helper.init(this, 200.0f / 360.0f, false);
       fps_helper.init(this);
       //set gravity for the world
-      //world->setGravity(btVector3(0.0f, 0.0f, 0.0f));
 
       app_scene = new visual_scene();
 
-      
+
       if (!loader.load_xml("assets/SpaceShip.dae")) {
         printf("failed to load file!\n");
         exit(1);
@@ -87,23 +55,15 @@ namespace octet {
       resource_dict dict;
       loader.get_resources(dict);
 
-      dynarray<resource*> meshes;
-      dict.find_all(meshes, atom_mesh);
+      // note that this call will dump the code below to log.txt
+      dict.dump_assets(log(""));
 
-      if (meshes.size()) {     
-        mesh *player_ship = meshes[0]->get_mesh();
-        mat4t location;
-        location.translate(vec3(0, 200, 0));
-        material *mat = new material(new image("assets/playerShip_uv.jpg"));
-        app_scene->add_shape(location, player_ship, mat, true);
-        player_node = app_scene->get_mesh_instance(0)->get_node();
-      }
-
-      //mesh_instance *mi = app_scene->add_shape(
-      //   mat,
-
-
-      //  )
+      mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
+      material *mat = new material(new image("assets/playerShip_uv.jpg"));
+      mat4t location;
+      location.translate(vec3(0, 100, 0));
+      app_scene->add_shape(location, player_mesh, mat, false);
+      player_node = app_scene->get_mesh_instance(0)->get_node();
 
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
@@ -116,7 +76,18 @@ namespace octet {
       mesh_box *box = new mesh_box(vec3(100, 1, 100));
       scene_node *node = new scene_node();
       app_scene->add_child(node);
-      app_scene->add_mesh_instance(new mesh_instance(node, box, red));
+      location.loadIdentity();
+      app_scene->add_shape(location, box, red, true, 0.0f);
+
+      material *blue = new material(vec4(0, 0, 1, 1));
+      mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
+      for (int i = -10; i <= 10; ++i) {
+        for (int j = -10; j <= 10; ++j) {
+          mat4t location;
+          location.translate((float)i, 70, (float)j);
+          app_scene->add_shape(location, sphere, blue, true);
+        }
+      }
     }
 
     /// this is called to draw the world
@@ -127,11 +98,7 @@ namespace octet {
 
       scene_node *camera_node = the_camera->get_node();
       mat4t &camera_to_world = camera_node->access_nodeToParent();
-      //mouse_look_helper.update(camera_to_world);
-
-      camera_to_world.loadIdentity();
-      camera_to_world.rotateY(camAngle.x());
-      camera_to_world.rotateX(camAngle.y());
+      mouse_look_helper.update(camera_to_world);
 
       fps_helper.update(player_node, camera_node);
 

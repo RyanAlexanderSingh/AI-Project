@@ -321,7 +321,7 @@ namespace octet { namespace scene {
           btDefaultMotionState *motionState = new btDefaultMotionState(transform);
           btVector3 inertiaTensor;
 
-          if (!is_dynamic) mass = 0;
+          //if (!is_dynamic) mass = 0;
    
           if (is_dynamic) shape->calculateLocalInertia(mass, inertiaTensor);
     
