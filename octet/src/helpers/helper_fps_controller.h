@@ -30,7 +30,7 @@ namespace octet { namespace helpers {
         float friction = 0.0f;
         if (the_app->is_key_down('A')) {
           player_node->activate();
-          player_node->apply_central_force(camera_node->get_x() * (-1000.0f));
+          player_node->apply_central_force(camera_node->get_x() * (-50.0f));
         } else if (the_app->is_key_down('D')) {
           player_node->activate();
           player_node->apply_central_force(camera_node->get_x() * (+1000.0f));
@@ -48,8 +48,11 @@ namespace octet { namespace helpers {
         }
         player_node->set_friction(friction);
 
+        //mouse scroll back and forward
+
+
         mat4t &camera_to_world = camera_node->access_nodeToParent();
-        camera_to_world.w() = (player_node->get_position() + vec3(0, 3.0f , -4.0f) ).xyz1();
+        camera_to_world.w() = (player_node->get_position() + vec3(0, 4.0f , -6.0f) ).xyz1();
       #endif
     }
   };

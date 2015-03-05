@@ -43,10 +43,12 @@ namespace octet {
       ShowCursor(false);
       mouse_look_helper.init(this, 200.0f / 360.0f, false);
       fps_helper.init(this);
-      //set gravity for the world
 
       app_scene = new visual_scene();
 
+      btVector3 gravity(0, 0, 0);
+
+      //app_scene->set_world_gravity(gravity);
 
       if (!loader.load_xml("assets/SpaceShip.dae")) {
         printf("failed to load file!\n");

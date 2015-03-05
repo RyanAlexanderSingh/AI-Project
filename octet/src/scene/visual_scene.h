@@ -54,6 +54,12 @@ namespace octet { namespace scene {
       btSequentialImpulseConstraintSolver *solver;  /// handler to resolve collisions
       btDiscreteDynamicsWorld *world;             /// physics world, contains rigid bodies
       typedef btCollisionShape collison_shape_t;
+
+      public:
+      void set_world_gravity(btVector3 gravity){
+        world->setGravity(gravity);
+      }
+      private:
     #else
       typedef void collison_shape_t;
     #endif
