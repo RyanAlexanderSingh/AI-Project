@@ -8,8 +8,6 @@
 #ifndef GHOST_H_INCLUDED
 #define GHOST_H_INCLUDED
 
-
-
 namespace octet {
   /// Scene containing a box with octet.
   class ghost : public app {
@@ -46,9 +44,7 @@ namespace octet {
 
       app_scene = new visual_scene();
 
-      btVector3 gravity(0, 0, 0);
-
-      //app_scene->set_world_gravity(gravity);
+      app_scene->set_world_gravity(btVector3(0,0,0));
 
       if (!loader.load_xml("assets/SpaceShip.dae")) {
         printf("failed to load file!\n");
