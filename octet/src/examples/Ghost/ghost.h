@@ -24,6 +24,8 @@ namespace octet {
 
     collada_builder loader;
 
+
+
     // scene for drawing box
     ref<visual_scene> app_scene;
 
@@ -38,6 +40,8 @@ namespace octet {
     double ecZ = 0;
 
     dynarray<material*> skybox;
+
+    
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -54,105 +58,12 @@ namespace octet {
       SKY_UP 4
       SKY_DOWN 5
       */
-      skybox[0] = new material(new image("assets/skybox/skybox_front.jpg"));
-      skybox[1] = new material(new image("assets/skybox/skybox_right.jpg"));
-      skybox[2] = new material(new image("assets/skybox/skybox_left.jpg"));
-      skybox[3] = new material(new image("assets/skybox/skybox_back.jpg"));
-      skybox[4] = new material(new image("assets/skybox/skybox_up.jpg"));
-      skybox[5] = new material(new image("assets/skybox/skybox_down.jpg"));
-    }
-
-    void displayInit(){
-      glClearColor(1, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-      glEnable(GL_DEPTH_TEST);
-      glLoadIdentity();
-    }
-
-
-    void display(void)
-    {
-      /* setup functions */
-      displayInit();
-
-      /* Draw Scene */
-      drawScene();
-
-      /* Flush, SwapBuffers, and sanity check */
-      glFlush();
-    }
-
-    /*
-    *  drawScene()
-    *  ------
-    *  Draw the entire Scene
-    */
-    void drawScene()
-    {
-      drawSkybox(3.5*dim);
-    }
-
-    void drawSkybox(double D)
-    {
-      glColor3f(1.0f, 1.0f, 1.0f);
-      glEnable(GL_TEXTURE_2D);
-
-      GLuint texture;
-
-      // Black/white checkerboard
-      float pixels[] = {
-        0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f
-      };
-
-      
-      /* Sides */
-      glBindTexture(GL_TEXTURE_2D, pixels);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(-D, -D, -D);
-      glTexCoord2f(1, 0); glVertex3f(+D, -D, -D);
-      glTexCoord2f(1, 1); glVertex3f(+D, +D, -D);
-      glTexCoord2f(0, 1); glVertex3f(-D, +D, -D);
-      glEnd();
-      glBindTexture(GL_TEXTURE_2D, skybox[0]);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(+D, -D, -D);
-      glTexCoord2f(1, 0); glVertex3f(+D, -D, +D);
-      glTexCoord2f(1, 1); glVertex3f(+D, +D, +D);
-      glTexCoord2f(0, 1); glVertex3f(+D, +D, -D);
-      glEnd();
-      glBindTexture(GL_TEXTURE_2D, skybox[2]);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(+D, -D, +D);
-      glTexCoord2f(1, 0); glVertex3f(-D, -D, +D);
-      glTexCoord2f(1, 1); glVertex3f(-D, +D, +D);
-      glTexCoord2f(0, 1); glVertex3f(+D, +D, +D);
-      glEnd();
-      glBindTexture(GL_TEXTURE_2D, skybox[3]);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(-D, -D, +D);
-      glTexCoord2f(1, 0); glVertex3f(-D, -D, -D);
-      glTexCoord2f(1, 1); glVertex3f(-D, +D, -D);
-      glTexCoord2f(0, 1); glVertex3f(-D, +D, +D);
-      glEnd();
-
-      /* Top and Bottom */
-      glBindTexture(GL_TEXTURE_2D, skybox[4]);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0); glVertex3f(-D, +D, -D);
-      glTexCoord2f(1, 0); glVertex3f(+D, +D, -D);
-      glTexCoord2f(1, 1); glVertex3f(+D, +D, +D);
-      glTexCoord2f(0, 1); glVertex3f(-D, +D, +D);
-      glEnd();
-      glBindTexture(GL_TEXTURE_2D, skybox[5]);
-      glBegin(GL_QUADS);
-      glTexCoord2f(1, 1); glVertex3f(+D, -D, -D);
-      glTexCoord2f(0, 1); glVertex3f(-D, -D, -D);
-      glTexCoord2f(0, 0); glVertex3f(-D, -D, +D);
-      glTexCoord2f(1, 0); glVertex3f(+D, -D, +D);
-      glEnd();
-
-      glDisable(GL_TEXTURE_2D);
+      //skybox[0] = new material(new image("assets/skybox/skybox_front.jpg"));
+      //skybox[1] = new material(new image("assets/skybox/skybox_right.jpg"));
+      //skybox[2] = new material(new image("assets/skybox/skybox_left.jpg"));
+      //skybox[3] = new material(new image("assets/skybox/skybox_back.jpg"));
+      //skybox[4] = new material(new image("assets/skybox/skybox_up.jpg"));
+      //skybox[5] = new material(new image("assets/skybox/skybox_down.jpg"));
     }
 
     /// this is called once OpenGL is initialized
@@ -162,15 +73,6 @@ namespace octet {
       ShowCursor(false);
       mouse_look_helper.init(this, 200.0f / 360.0f, false);
       fps_helper.init(this);
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glLoadIdentity();
-
-      initSkybox();
-
-      display();
-
-      glFlush();
 
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
@@ -194,8 +96,13 @@ namespace octet {
 
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
-      the_camera->get_node()->translate(vec3(0, 4, 0));
       the_camera->set_far_plane(10000);
+      the_camera->get_node()->translate(vec3(0, 4, 0));
+
+      mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();
+      camera.rotateZ(180);
+      camera.loadIdentity();
+      
 
       inputs.init(this);
 
@@ -231,7 +138,7 @@ namespace octet {
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
-
+    
       inputs.update();
 
       // draw the scene

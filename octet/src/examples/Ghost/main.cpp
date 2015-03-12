@@ -9,7 +9,9 @@
 
 #define OCTET_BULLET 1
 
+
 #include "../../octet.h"
+#include "SOIL.h"
 
 #include "inputs.h"
 #include "ghost.h"

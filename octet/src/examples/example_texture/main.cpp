@@ -8,6 +8,7 @@
 //
 
 #include "../../octet.h"
+#include "SOIL.h"
 
 #include "example_texture.h"
 
