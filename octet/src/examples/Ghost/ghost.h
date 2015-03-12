@@ -27,11 +27,132 @@ namespace octet {
     // scene for drawing box
     ref<visual_scene> app_scene;
 
+    /* PROJECTION */
+    double dim = 25;
+    int th = 340;
+    int ph = 30;
+    int fov = 25;
+    double asp = 1;
+    double ecX = 0;
+    double ecY = 0;
+    double ecZ = 0;
+
+    dynarray<material*> skybox;
+
   public:
     /// this is called when we construct the class before everything is initialised.
     ghost(int argc, char **argv) : app(argc, argv) {
     }
-    ~ghost(){
+
+    void initSkybox(void)
+    {
+      /*
+      SKY_FRONT 0
+      SKY_RIGHT 1
+      SKY_LEFT 2
+      SKY_BACK 3
+      SKY_UP 4
+      SKY_DOWN 5
+      */
+      skybox[0] = new material(new image("assets/skybox/skybox_front.jpg"));
+      skybox[1] = new material(new image("assets/skybox/skybox_right.jpg"));
+      skybox[2] = new material(new image("assets/skybox/skybox_left.jpg"));
+      skybox[3] = new material(new image("assets/skybox/skybox_back.jpg"));
+      skybox[4] = new material(new image("assets/skybox/skybox_up.jpg"));
+      skybox[5] = new material(new image("assets/skybox/skybox_down.jpg"));
+    }
+
+    void displayInit(){
+      glClearColor(1, 0.0, 0.0, 0.0);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+      glEnable(GL_DEPTH_TEST);
+      glLoadIdentity();
+    }
+
+
+    void display(void)
+    {
+      /* setup functions */
+      displayInit();
+
+      /* Draw Scene */
+      drawScene();
+
+      /* Flush, SwapBuffers, and sanity check */
+      glFlush();
+    }
+
+    /*
+    *  drawScene()
+    *  ------
+    *  Draw the entire Scene
+    */
+    void drawScene()
+    {
+      drawSkybox(3.5*dim);
+    }
+
+    void drawSkybox(double D)
+    {
+      glColor3f(1.0f, 1.0f, 1.0f);
+      glEnable(GL_TEXTURE_2D);
+
+      GLuint texture;
+
+      // Black/white checkerboard
+      float pixels[] = {
+        0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f
+      };
+
+      
+      /* Sides */
+      glBindTexture(GL_TEXTURE_2D, pixels);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex3f(-D, -D, -D);
+      glTexCoord2f(1, 0); glVertex3f(+D, -D, -D);
+      glTexCoord2f(1, 1); glVertex3f(+D, +D, -D);
+      glTexCoord2f(0, 1); glVertex3f(-D, +D, -D);
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, skybox[0]);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex3f(+D, -D, -D);
+      glTexCoord2f(1, 0); glVertex3f(+D, -D, +D);
+      glTexCoord2f(1, 1); glVertex3f(+D, +D, +D);
+      glTexCoord2f(0, 1); glVertex3f(+D, +D, -D);
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, skybox[2]);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex3f(+D, -D, +D);
+      glTexCoord2f(1, 0); glVertex3f(-D, -D, +D);
+      glTexCoord2f(1, 1); glVertex3f(-D, +D, +D);
+      glTexCoord2f(0, 1); glVertex3f(+D, +D, +D);
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, skybox[3]);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex3f(-D, -D, +D);
+      glTexCoord2f(1, 0); glVertex3f(-D, -D, -D);
+      glTexCoord2f(1, 1); glVertex3f(-D, +D, -D);
+      glTexCoord2f(0, 1); glVertex3f(-D, +D, +D);
+      glEnd();
+
+      /* Top and Bottom */
+      glBindTexture(GL_TEXTURE_2D, skybox[4]);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0); glVertex3f(-D, +D, -D);
+      glTexCoord2f(1, 0); glVertex3f(+D, +D, -D);
+      glTexCoord2f(1, 1); glVertex3f(+D, +D, +D);
+      glTexCoord2f(0, 1); glVertex3f(-D, +D, +D);
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, skybox[5]);
+      glBegin(GL_QUADS);
+      glTexCoord2f(1, 1); glVertex3f(+D, -D, -D);
+      glTexCoord2f(0, 1); glVertex3f(-D, -D, -D);
+      glTexCoord2f(0, 0); glVertex3f(-D, -D, +D);
+      glTexCoord2f(1, 0); glVertex3f(+D, -D, +D);
+      glEnd();
+
+      glDisable(GL_TEXTURE_2D);
     }
 
     /// this is called once OpenGL is initialized
@@ -42,9 +163,17 @@ namespace octet {
       mouse_look_helper.init(this, 200.0f / 360.0f, false);
       fps_helper.init(this);
 
-      app_scene = new visual_scene();
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glLoadIdentity();
 
-      app_scene->set_world_gravity(btVector3(0,0,0));
+      initSkybox();
+
+      display();
+
+      glFlush();
+
+      app_scene = new visual_scene();
+      app_scene->set_world_gravity(btVector3(0, 0, 0));
 
       if (!loader.load_xml("assets/SpaceShip.dae")) {
         printf("failed to load file!\n");
@@ -109,6 +238,6 @@ namespace octet {
       app_scene->render((float)vx / vy);
     }
   };
-}
+  }
 
 #endif
