@@ -24,8 +24,6 @@ namespace octet {
 
     collada_builder loader;
 
-
-
     // scene for drawing box
     ref<visual_scene> app_scene;
 
@@ -38,10 +36,6 @@ namespace octet {
     double ecX = 0;
     double ecY = 0;
     double ecZ = 0;
-
-    dynarray<material*> skybox;
-
-    
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -100,7 +94,7 @@ namespace octet {
       the_camera->get_node()->translate(vec3(0, 4, 0));
 
       mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();
-      camera.rotateZ(180);
+      //camera.rotateZ(180);
       camera.loadIdentity();
       
 
@@ -132,7 +126,7 @@ namespace octet {
 
       scene_node *camera_node = the_camera->get_node();
       mat4t &camera_to_world = camera_node->access_nodeToParent();
-      mouse_look_helper.update(camera_to_world);
+     // mouse_look_helper.update(camera_to_world);
 
       fps_helper.update(player_node, camera_node);
 

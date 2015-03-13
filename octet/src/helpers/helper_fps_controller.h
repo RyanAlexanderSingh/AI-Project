@@ -34,43 +34,55 @@ namespace octet { namespace helpers {
         
         float friction = 0.0f;
         if (the_app->is_key_down('A')) {
-          if (angle > -max_angle) {
-            player_rotate(player_node, -angle_iteration);
-            angle -= angle_iteration;
-          }
-          printf("%f\n", angle);  
-        } else if (the_app->is_key_down('D')) {
-          if (angle < max_angle) {
             player_rotate(player_node, angle_iteration);
-            angle += angle_iteration;
-          }
-          printf("%f\n", angle);
+        } else if (the_app->is_key_down('D')) {
+            player_rotate(player_node, -angle_iteration);
         } else if (the_app->is_key_down('W')) {
           player_node->activate();
-          player_node->apply_central_force(camera_node->get_z() * (-50.0f));
+          player_node->apply_central_force(player_node->get_z() * (10.0f));
         } else if (the_app->is_key_down('S')) {
           player_node->activate();
-          player_node->apply_central_force(camera_node->get_z() * (+50.0f));
+          player_node->apply_central_force(player_node->get_z() * (-10.0f));
         } else {
           friction = 1.0f;
         }
-        if (the_app->is_key_going_down(' ')) {
-          player_node->apply_central_force(camera_node->get_y() * (+50.0f));
+        if (the_app->is_key_down(' ')) {
+          player_node->activate();
+          player_node->apply_central_force(player_node->get_y() * (+50.0f));
+        }
+        else if (the_app->is_key_down('R')) {
+          player_node->activate();
+          player_node->apply_central_force(player_node->get_y() * (-50.0f));
         }
         player_node->set_friction(friction);
+        
+        player_node->add_child(camera_node);
+        camera_node->loadIdentity();
+        camera_node->translate(vec3(0.0f, 30.0f, -30.0f));
 
-        mat4t &camera_to_world = camera_node->access_nodeToParent();
-        camera_to_world.w() = (player_node->get_position() + vec3(0, 3.0f , -6.0f) ).xyz1();
+        mat4t modelToWorld;
+        modelToWorld.loadIdentity();
+        modelToWorld[3] = vec4(camera_node->access_nodeToParent().w().x(), camera_node->access_nodeToParent().w().y(), camera_node->access_nodeToParent().w().z(), 1);
+        modelToWorld.rotateY((float)-x*2.0f);
+        modelToWorld.rotateX((float)-y*2.0f);
+        /*if (vy / 2 - y < 70 && vy / 2 - y > -70)
+          modelToWorld.rotateX((float)vy / 2 - y);
+        if (vy / 2 - y >= 70)
+          modelToWorld.rotateX(70);
+        if (vy / 2 - y <= -70)
+          modelToWorld.rotateX(-70);*/
+        camera_node->access_nodeToParent() = modelToWorld;//apply to the node
+
       #endif
     }
 
-    void player_rotate(scene_node *player_node, float x){
+    void player_rotate(scene_node *player_node, float angle){
       player_node->activate();
       btTransform trans = player_node->get_rigid_body()->getCenterOfMassTransform();
       btQuaternion transrot = trans.getRotation();
       btQuaternion rotquat;
       rotquat = rotquat.getIdentity();
-      rotquat.setY(x);
+      rotquat.setY(angle);
       transrot = rotquat * transrot;
       trans.setRotation(transrot);
       player_node->get_rigid_body()->setCenterOfMassTransform(trans);
