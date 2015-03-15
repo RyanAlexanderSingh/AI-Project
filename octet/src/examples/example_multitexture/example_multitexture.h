@@ -14,6 +14,7 @@ namespace octet {
 
     ref<image> jupiter;
     ref<image> jupiter_mask;
+    ref<image> poo;
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -25,7 +26,7 @@ namespace octet {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      jupiter = new image("assets/NASA-Jupiter-512.jpg");
+      jupiter = new image("assets/bg1.jpg");
       jupiter_mask = new image("assets/NASA-Jupiter-512-mask.gif");
 
       param_shader *shader = new param_shader("shaders/default.vs", "shaders/multitexture.fs");

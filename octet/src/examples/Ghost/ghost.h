@@ -14,50 +14,42 @@ namespace octet {
     // scene for drawing box
 
     inputs inputs;
-    mouse_look mouse_look_helper;
-    helper_fps_controller fps_helper;
 
     ref<scene_node> player_node;
 
     //camera instance
     ref<camera_instance> the_camera;
-
+      
     collada_builder loader;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
 
-    /* PROJECTION */
-    double dim = 25;
-    int th = 340;
-    int ph = 30;
-    int fov = 25;
-    double asp = 1;
-    double ecX = 0;
-    double ecY = 0;
-    double ecZ = 0;
+    ref<material> custom_mat;
+
+    ref<image> skybox_bg;
+    ref<image> jupiter_mask;
+
 
   public:
     /// this is called when we construct the class before everything is initialised.
     ghost(int argc, char **argv) : app(argc, argv) {
     }
 
-    void initSkybox(void)
-    {
-      /*
-      SKY_FRONT 0
-      SKY_RIGHT 1
-      SKY_LEFT 2
-      SKY_BACK 3
-      SKY_UP 4
-      SKY_DOWN 5
-      */
-      //skybox[0] = new material(new image("assets/skybox/skybox_front.jpg"));
-      //skybox[1] = new material(new image("assets/skybox/skybox_right.jpg"));
-      //skybox[2] = new material(new image("assets/skybox/skybox_left.jpg"));
-      //skybox[3] = new material(new image("assets/skybox/skybox_back.jpg"));
-      //skybox[4] = new material(new image("assets/skybox/skybox_up.jpg"));
-      //skybox[5] = new material(new image("assets/skybox/skybox_down.jpg"));
+    void create_skybox(){
+      skybox_bg = new image("assets/circle_bg.jpg");
+     /* jupiter_mask = new image("assets/hi.jpg");
+
+      param_shader *shader = new param_shader("shaders/default.vs", "shaders/multitexture.fs");
+      custom_mat = new material(vec4(1, 1, 1, 1), shader);
+      custom_mat->add_sampler(0, app_utils::get_atom("skybox_bg"), skybox_bg, new sampler());
+      custom_mat->add_sampler(1, app_utils::get_atom("jupiter_mask"), jupiter_mask, new sampler());*/
+
+      custom_mat = new material(vec4(0, 0, 0, 1));
+      mesh_box *box = new mesh_box(vec3(100));
+      scene_node *node = new scene_node();
+      app_scene->add_child(node);
+      app_scene->add_mesh_instance(new mesh_instance(node, box, custom_mat));
     }
 
     /// this is called once OpenGL is initialized
@@ -65,8 +57,7 @@ namespace octet {
 
       //hide the cursor
       ShowCursor(false);
-      mouse_look_helper.init(this, 200.0f / 360.0f, false);
-      fps_helper.init(this);
+      inputs.init(this);
 
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
@@ -78,7 +69,7 @@ namespace octet {
       resource_dict dict;
       loader.get_resources(dict);
 
-      // note that this call will dump the code below to log.txt
+      //note that this call will dump the code below to log.txt
       dict.dump_assets(log(""));
 
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
@@ -93,12 +84,14 @@ namespace octet {
       the_camera->set_far_plane(10000);
       the_camera->get_node()->translate(vec3(0, 4, 0));
 
-      mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();
+      mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();  
+      //camera.rotateX(180);
       //camera.rotateZ(180);
-      camera.loadIdentity();
-      
 
       inputs.init(this);
+
+      //skybox
+      create_skybox();
 
       material *red = new material(vec4(0, 1, 1, 1));
       mesh_box *box = new mesh_box(vec3(100, 1, 100));
@@ -117,7 +110,7 @@ namespace octet {
         }
       }
     }
-
+     
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
       int vx = 0, vy = 0;
@@ -125,18 +118,16 @@ namespace octet {
       app_scene->begin_render(vx, vy);
 
       scene_node *camera_node = the_camera->get_node();
-      mat4t &camera_to_world = camera_node->access_nodeToParent();
-     // mouse_look_helper.update(camera_to_world);
-
-      fps_helper.update(player_node, camera_node);
-
+      inputs.update(player_node, camera_node);
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
     
-      inputs.update();
-
       // draw the scene
       app_scene->render((float)vx / vy);
+
+      scene_node *skybox = app_scene->get_mesh_instance(1)->get_node();
+      //skybox->rotate(0.02f, vec3(1, 0, 0));
+      //skybox->rotate(0.02f, vec3(0, 1, 0));
     }
   };
   }

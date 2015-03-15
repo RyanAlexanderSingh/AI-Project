@@ -14,9 +14,11 @@
 #include "SOIL.h"
 
 #include "inputs.h"
-#include "ghost.h"
 #include "planet.h"
+#include "ai_enemy.h"
 #include "player.h"
+#include "ghost.h"
+
 
 int main(int argc, char **argv) {
   // set up the platform.
