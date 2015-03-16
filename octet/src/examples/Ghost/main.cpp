@@ -16,6 +16,7 @@
 #include "planet.h"
 #include "ai_enemy.h"
 #include "player.h"
+#include "enemies.h"
 #include "ghost.h"
 
 

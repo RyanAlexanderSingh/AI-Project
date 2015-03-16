@@ -32,10 +32,6 @@ namespace octet {
     void update(scene_node *player_node, scene_node *camera_node){
       player_node->set_damping(0.0f, 0.0f);
       player_node->clamp_linear_velocity(10);
-      int x, y;
-      the_app->get_mouse_pos(x, y);
-      int vx, vy;
-      the_app->get_viewport_size(vx, vy);
 
       float friction = 0.0f;
       if (the_app->is_key_down('A')) {
@@ -57,18 +53,11 @@ namespace octet {
         player_accelerate(player_node, acceleration);
       }
       else if (!the_app->is_key_down('S') && !the_app->is_key_down('W')){
-        player_node->set_damping(0.5f, 0.0f);
+        player_node->set_damping(0.5f, 0.5f);
       }
       else {
         friction = 1.0f;
-      }
-      if (the_app->is_key_down(' ')) {
-        player_node->activate();
-        player_node->apply_central_force(player_node->get_y() * (+50.0f));
-      }
-      else if (the_app->is_key_down('R')) {
-        player_node->activate();
-        player_node->apply_central_force(player_node->get_y() * (-50.0f));
+       
       }
       player_node->set_friction(friction);
 
@@ -77,18 +66,6 @@ namespace octet {
       camera_node->translate(vec3(0.0f, 20.0f, -30.0f));
       camera_node->access_nodeToParent().rotateY(180);
       camera_node->access_nodeToParent().rotateX(-30);
-      //mat4t modelToWorld;
-      //modelToWorld.loadIdentity();
-      //modelToWorld[3] = vec4(camera_node->access_nodeToParent().w().x(), camera_node->access_nodeToParent().w().y(), camera_node->access_nodeToParent().w().z(), 1);
-      //modelToWorld.rotateY((float)-x*2.0f);
-      //modelToWorld.rotateX((float)-y*2.0f);
-      ///*if (vy / 2 - y < 70 && vy / 2 - y > -70)
-      //modelToWorld.rotateX((float)vy / 2 - y);
-      //if (vy / 2 - y >= 70)
-      //modelToWorld.rotateX(70);
-      //if (vy / 2 - y <= -70)
-      //modelToWorld.rotateX(-70);*/
-      //camera_node->access_nodeToParent() = modelToWorld;//apply to the node
 
       if (the_app->is_key_down(key_esc)){
         exit(1);
