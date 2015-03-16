@@ -13,10 +13,11 @@ namespace octet {
   class ghost : public app {
     // scene for drawing box
 
+    //handles player controls
     inputs inputs;
 
+    //scene node for the player
     ref<scene_node> player_node;
-
     //camera instance
     ref<camera_instance> the_camera;
       
@@ -24,12 +25,6 @@ namespace octet {
 
     // scene for drawing box
     ref<visual_scene> app_scene;
-
-    ref<material> custom_mat;
-
-    ref<image> skybox_bg;
-    ref<image> jupiter_mask;
-
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -54,8 +49,6 @@ namespace octet {
     /// this is called once OpenGL is initialized
     void app_init() {
 
-      //hide the cursor
-      //ShowCursor(false);
       inputs.init(this);
 
       app_scene = new visual_scene();
@@ -69,7 +62,7 @@ namespace octet {
       loader.get_resources(dict);
 
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/playerShip_uv.jpg"));
+      material *mat = new material(new image("assets/playerShip_test.jpg"));
       mat4t location;
       location.translate(vec3(0, 100, 0));
       app_scene->add_shape(location, player_mesh, mat, false);
@@ -78,11 +71,6 @@ namespace octet {
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
       the_camera->set_far_plane(10000);
-      the_camera->get_node()->translate(vec3(0, 4, 0));
-
-      mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();  
-      //camera.rotateY(180);
-      camera.rotateZ(180);
 
       inputs.init(this);
 
@@ -113,8 +101,7 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
-      scene_node *camera_node = the_camera->get_node();
-      inputs.update(player_node, camera_node);
+      inputs.update(player_node, the_camera->get_node());
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
     

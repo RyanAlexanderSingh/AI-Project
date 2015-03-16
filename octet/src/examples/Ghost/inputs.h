@@ -15,7 +15,7 @@ namespace octet {
   class inputs : public resource {
 
     app *the_app;
-    float angle_iteration = 0.05f;
+    float angle_iteration = 0.01f;
     float acceleration = 0.0f;
     float power = 2.0f;
     float decel = 2.0f;
