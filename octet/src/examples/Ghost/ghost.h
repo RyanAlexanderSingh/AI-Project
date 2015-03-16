@@ -37,40 +37,36 @@ namespace octet {
     }
 
     void create_skybox(){
-      skybox_bg = new image("assets/circle_bg.jpg");
-     /* jupiter_mask = new image("assets/hi.jpg");
 
-      param_shader *shader = new param_shader("shaders/default.vs", "shaders/multitexture.fs");
-      custom_mat = new material(vec4(1, 1, 1, 1), shader);
-      custom_mat->add_sampler(0, app_utils::get_atom("skybox_bg"), skybox_bg, new sampler());
-      custom_mat->add_sampler(1, app_utils::get_atom("jupiter_mask"), jupiter_mask, new sampler());*/
+      if (!loader.load_xml("assets/skybox_sphere.dae")) {
+        printf("failed to load file skybox file!\n");
+        exit(1);
+      }
+      resource_dict dict;
+      loader.get_resources(dict);
 
-      custom_mat = new material(vec4(0, 0, 0, 1));
-      mesh_box *box = new mesh_box(vec3(100));
-      scene_node *node = new scene_node();
-      app_scene->add_child(node);
-      app_scene->add_mesh_instance(new mesh_instance(node, box, custom_mat));
+      mesh *player_mesh = dict.get_mesh("pSphere1-lib+lambert1");
+      material *mat = new material(new image("assets/skybox.gif"));
+      mat4t location;
+      app_scene->add_shape(location, player_mesh, mat, true);
     }
 
     /// this is called once OpenGL is initialized
     void app_init() {
 
       //hide the cursor
-      ShowCursor(false);
+      //ShowCursor(false);
       inputs.init(this);
 
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
 
       if (!loader.load_xml("assets/SpaceShip.dae")) {
-        printf("failed to load file!\n");
+        printf("failed to load file player ship!\n");
         exit(1);
       }
       resource_dict dict;
       loader.get_resources(dict);
-
-      //note that this call will dump the code below to log.txt
-      dict.dump_assets(log(""));
 
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/playerShip_uv.jpg"));
@@ -85,8 +81,8 @@ namespace octet {
       the_camera->get_node()->translate(vec3(0, 4, 0));
 
       mat4t &camera = app_scene->get_camera_instance(0)->get_node()->access_nodeToParent();  
-      //camera.rotateX(180);
-      //camera.rotateZ(180);
+      //camera.rotateY(180);
+      camera.rotateZ(180);
 
       inputs.init(this);
 
@@ -126,8 +122,8 @@ namespace octet {
       app_scene->render((float)vx / vy);
 
       scene_node *skybox = app_scene->get_mesh_instance(1)->get_node();
-      //skybox->rotate(0.02f, vec3(1, 0, 0));
-      //skybox->rotate(0.02f, vec3(0, 1, 0));
+      skybox->rotate(0.003f, vec3(1, 0, 0));
+      skybox->rotate(0.003f, vec3(0, 1, 0));
     }
   };
   }

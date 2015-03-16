@@ -74,20 +74,21 @@ namespace octet {
 
       player_node->add_child(camera_node);
       camera_node->loadIdentity();
-      camera_node->translate(vec3(0.0f, 30.0f, -30.0f));
-
-      mat4t modelToWorld;
-      modelToWorld.loadIdentity();
-      modelToWorld[3] = vec4(camera_node->access_nodeToParent().w().x(), camera_node->access_nodeToParent().w().y(), camera_node->access_nodeToParent().w().z(), 1);
-      modelToWorld.rotateY((float)-x*2.0f);
-      modelToWorld.rotateX((float)-y*2.0f);
-      /*if (vy / 2 - y < 70 && vy / 2 - y > -70)
-      modelToWorld.rotateX((float)vy / 2 - y);
-      if (vy / 2 - y >= 70)
-      modelToWorld.rotateX(70);
-      if (vy / 2 - y <= -70)
-      modelToWorld.rotateX(-70);*/
-      camera_node->access_nodeToParent() = modelToWorld;//apply to the node
+      camera_node->translate(vec3(0.0f, 20.0f, -30.0f));
+      camera_node->access_nodeToParent().rotateY(180);
+      camera_node->access_nodeToParent().rotateX(-30);
+      //mat4t modelToWorld;
+      //modelToWorld.loadIdentity();
+      //modelToWorld[3] = vec4(camera_node->access_nodeToParent().w().x(), camera_node->access_nodeToParent().w().y(), camera_node->access_nodeToParent().w().z(), 1);
+      //modelToWorld.rotateY((float)-x*2.0f);
+      //modelToWorld.rotateX((float)-y*2.0f);
+      ///*if (vy / 2 - y < 70 && vy / 2 - y > -70)
+      //modelToWorld.rotateX((float)vy / 2 - y);
+      //if (vy / 2 - y >= 70)
+      //modelToWorld.rotateX(70);
+      //if (vy / 2 - y <= -70)
+      //modelToWorld.rotateX(-70);*/
+      //camera_node->access_nodeToParent() = modelToWorld;//apply to the node
 
       if (the_app->is_key_down(key_esc)){
         exit(1);

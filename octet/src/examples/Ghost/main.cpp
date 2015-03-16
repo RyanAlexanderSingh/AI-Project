@@ -11,7 +11,6 @@
 
 
 #include "../../octet.h"
-#include "SOIL.h"
 
 #include "inputs.h"
 #include "planet.h"
