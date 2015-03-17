@@ -41,7 +41,11 @@ namespace octet {
     void rotate_to_player(vec3 target_location, vec3 current_location, scene_node *enemy_ship){
       enemy_ship->activate();
       enemy_ship->set_damping(0.5f, 3.5f);
+      enemy_ship->set_friction(1.0f);
       facingVec = target_location - current_location;
+
+      btVector3 vec_x = get_btVector3(target_location);
+      btVector3 vec_y = get_btVector3(current_location);
 
       float temp = atan2(facingVec.z(), facingVec.x());
       float tempDegrees = temp;
@@ -54,18 +58,19 @@ namespace octet {
 
       float angle_diff = oldAngle - tempDegrees;
       oldAngle = tempDegrees;
+
       inputs.rotate(enemy_ship, angle_diff);
       
       if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
-        inputs.accelerate(enemy_ship, 3.0f);
+        inputs.accelerate(enemy_ship, 6.0f);
       }
-      //else{
-      //  //enemy_ship->set_damping(2.0f, 1.0f);
-      //}
-
-     
-      printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
-      //printf("Degrees: %f\n", tempDegrees);
+      else{
+        enemy_ship->set_damping(5.0f, 3.5f);
+      }
+      
+      //DEBUGGING   
+      //printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
+      printf("Degrees: %f\n", tempDegrees);
       printf("Degrees: %f\n", angle_diff);
     }
 

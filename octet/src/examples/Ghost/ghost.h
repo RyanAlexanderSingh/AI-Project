@@ -20,6 +20,8 @@ namespace octet {
     ref<scene_node> player_node;
     //scene node for enemy
     ref<scene_node> enemy_node;
+
+    ref<scene_node> test_particle;
     //camera instance
     ref<camera_instance> the_camera;
 

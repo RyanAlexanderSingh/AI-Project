@@ -66,8 +66,7 @@ namespace octet {
       }
 
       else {
-        friction = 1.0f;
-       
+        friction = 1.0f; 
       }
       player_node->set_friction(friction);
 
@@ -93,6 +92,7 @@ namespace octet {
       trans.setRotation(transrot);
       player_node->get_rigid_body()->setCenterOfMassTransform(trans);
     }
+
 
     //used to control the player but could also be used to control the AI ship movements
     void accelerate(scene_node *ship_node, float accel){
