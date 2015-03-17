@@ -33,7 +33,7 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/playerShip_test.jpg"));
       mat4t enemy_location;
-      enemy_location.translate(vec3(0, 100, 100));
+      enemy_location.translate(vec3(0, 100, 50));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 

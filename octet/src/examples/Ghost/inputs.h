@@ -18,8 +18,6 @@ namespace octet {
     float angle_iteration = 0.01f;
     float acceleration = 0.0f;
     float power = 2.0f;
-    float decel = 2.0f;
-    float max = 0.0f;
 
   public:
     inputs(){}
@@ -30,31 +28,43 @@ namespace octet {
 
     //called every frame to update the player physics
     void update(scene_node *player_node, scene_node *camera_node){
-      player_node->set_damping(0.0f, 0.0f);
+      player_node->set_damping(0.5f, 1.0f);
       player_node->clamp_linear_velocity(10);
 
       float friction = 0.0f;
       if (the_app->is_key_down('A')) {
-        player_rotate(player_node, angle_iteration);
+        rotate(player_node, angle_iteration);
       }
       else if (the_app->is_key_down('D')) {
-        player_rotate(player_node, -angle_iteration);
+        rotate(player_node, -angle_iteration);
       }
       if (the_app->is_key_down('W')) {
         if (acceleration < 10.0f){
           acceleration += power;
         }
-        player_accelerate(player_node, acceleration);
+        accelerate(player_node, acceleration);
       }
       else if (the_app->is_key_down('S')) {
         if (acceleration > -10.0f){
           acceleration -= power;
         }
-        player_accelerate(player_node, acceleration);
+        accelerate(player_node, acceleration);
       }
-      else if (!the_app->is_key_down('S') && !the_app->is_key_down('W')){
-        player_node->set_damping(0.5f, 0.5f);
+      else if (the_app->is_key_down('Q')) {
+        if (acceleration > -10.0f){
+          acceleration -= power;
+        }
+        player_node->activate();
+        player_node->apply_central_force(player_node->get_x() * (-acceleration));
       }
+      else if (the_app->is_key_down('E')) {
+        if (acceleration > -10.0f){
+          acceleration -= power;
+        }
+        player_node->activate();
+        player_node->apply_central_force(player_node->get_x() * (acceleration));
+      }
+
       else {
         friction = 1.0f;
        
@@ -71,7 +81,8 @@ namespace octet {
         exit(1);
       }
     }
-    void player_rotate(scene_node *player_node, float angle){
+
+    void rotate(scene_node *player_node, float angle){
       player_node->activate();
       btTransform trans = player_node->get_rigid_body()->getCenterOfMassTransform();
       btQuaternion transrot = trans.getRotation();
@@ -84,7 +95,7 @@ namespace octet {
     }
 
     //used to control the player but could also be used to control the AI ship movements
-    void player_accelerate(scene_node *ship_node, float accel){
+    void accelerate(scene_node *ship_node, float accel){
       ship_node->activate();
       ship_node->apply_central_force(ship_node->get_z() * (accel));
     }

@@ -18,6 +18,8 @@ namespace octet {
 
     //scene node for the player
     ref<scene_node> player_node;
+    //scene node for enemy
+    ref<scene_node> enemy_node;
     //camera instance
     ref<camera_instance> the_camera;
 
@@ -29,6 +31,7 @@ namespace octet {
     //create default player
     player player;
     enemies enemy1;
+    ai_enemy ai;
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -67,13 +70,16 @@ namespace octet {
       //create enemy
       enemy1.init(this, app_scene);
       enemy1.create_enemy1();
+      enemy_node = app_scene->get_mesh_instance(1)->get_node();
+
+      ai.init(this, app_scene);
 
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
       the_camera->set_far_plane(10000);
 
       //skybox
-      create_skybox();
+      //create_skybox();
 
       material *blue = new material(vec4(0, 0, 1, 1));
       mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
@@ -92,23 +98,19 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
-      get_mouse_pos(x, y);
-      material *blue = new material(vec4(0, 1, 1, 1));
-      mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
-      mat4t location;
-      location.translate(vec3(x, 100, 0));
-      app_scene->add_shape(location, sphere, blue, true);
-
       inputs.update(player_node, the_camera->get_node());
+
+      ai.rotate_to_player(player_node->get_position(), enemy_node->get_position(), enemy_node);
+  
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
 
       // draw the scene
       app_scene->render((float)vx / vy);
 
-      scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
       skybox->rotate(0.003f, vec3(1, 0, 0));
-      skybox->rotate(0.003f, vec3(0, 1, 0));
+      skybox->rotate(0.003f, vec3(0, 1, 0));*/
     }
   };
 }
