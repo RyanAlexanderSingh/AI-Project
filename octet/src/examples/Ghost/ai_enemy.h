@@ -34,14 +34,11 @@ namespace octet {
       inputs.init(app);
     }
 
-    void update(){
-      
-    }
-
-    void rotate_to_player(vec3 target_location, vec3 current_location, scene_node *enemy_ship){
+    void find_player(vec3 target_location, vec3 current_location, scene_node *enemy_ship){
       enemy_ship->activate();
       enemy_ship->set_damping(0.5f, 3.5f);
       enemy_ship->set_friction(1.0f);
+
       facingVec = target_location - current_location;
 
       btVector3 vec_x = get_btVector3(target_location);
@@ -69,9 +66,9 @@ namespace octet {
       }
       
       //DEBUGGING   
-      //printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
-      printf("Degrees: %f\n", tempDegrees);
-      printf("Degrees: %f\n", angle_diff);
+      printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
+      //printf("Degrees: %f\n", tempDegrees);
+      //printf("Degrees: %f\n", angle_diff);
     }
 
     ~ai_enemy() {

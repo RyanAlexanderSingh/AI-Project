@@ -77,12 +77,7 @@ namespace octet {
       enemy1.create_enemy1();
       enemy_node = app_scene->get_mesh_instance(1)->get_node();
 
-      material *m = new material(vec4(0, 0, 1, 1));
-      mesh_sphere *test_mesh = new mesh_sphere(vec3(0, 0, 0), 0.2f);
-      mat4t location;
-      location.translate(0.0f, 100.0f, 10.0f);
-      app_scene->add_shape(location, test_mesh, m, true);
-      test_particle = app_scene->get_mesh_instance(2)->get_node();
+
 
 
       ai.init(this, app_scene);
@@ -113,27 +108,7 @@ namespace octet {
 
       inputs.update(player_node, the_camera->get_node());
 
-      int mousex, mousey;
-      get_mouse_pos(mousex, mousey);
-      /*float dx = (mousex - vx * 0.5f) / 20.0f;
-      float dy = (mousey - vy * 0.5f) / 20.0f;*/
-
-      float dx = mousex / 20.0f;
-      float dy = 0.0f;
-
-      if (oldMouseX != dx || oldMouseY != dy){
-        float dx_diff = oldMouseX - dx;
-        float dy_diff = oldMouseY - dy;
-        btVector3 dir = btVector3(dx_diff, 0.0f, dy_diff);
-        test_particle->get_rigid_body()->activate();
-        test_particle->get_rigid_body()->translate(dir);
-        oldMouseX = dx;
-        oldMouseY = dy;
-        printf("MOUSEX: %f\n", dx_diff);
-      }
-      
-
-      ai.rotate_to_player(player_node->get_position(), enemy_node->get_position(), enemy_node);
+      ai.find_player(player_node->get_position(), enemy_node->get_position(), enemy_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);

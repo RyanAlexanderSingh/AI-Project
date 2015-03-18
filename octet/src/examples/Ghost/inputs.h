@@ -88,6 +88,7 @@ namespace octet {
       btQuaternion rotquat;
       rotquat = rotquat.getIdentity();
       rotquat.setY(angle);
+
       transrot = rotquat * transrot;
       trans.setRotation(transrot);
       player_node->get_rigid_body()->setCenterOfMassTransform(trans);
