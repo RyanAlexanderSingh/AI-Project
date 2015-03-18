@@ -12,7 +12,7 @@
 
 #include "../../octet.h"
 
-#include "inputs.h"
+#include "ship_controls.h"
 #include "planet.h"
 #include "ai_enemy.h"
 #include "player.h"

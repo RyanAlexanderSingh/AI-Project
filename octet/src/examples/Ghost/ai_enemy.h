@@ -16,7 +16,7 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
-    inputs inputs;
+    ship_controls inputs;
 
     //subject to change
     float acceleration = 5.0f;

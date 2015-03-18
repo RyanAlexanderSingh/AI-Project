@@ -2,25 +2,25 @@
 //
 // (C) Ryan Singh 2015
 //
-// Inputs class
+// Ship controller class
 //
 
-#ifndef INPUTS_H_INCLUDED
-#define INPUTS_H_INCLUDED
+#ifndef SHIP_CONTROL_H_INCLUDED
+#define SHIP_CONTROL_H_INCLUDED
 namespace octet {
 
   ///Class to create a vehicle using hinge constraints.
   ///Class will create a vehicle out of rigid bodies. The vehicle consists of a chassis, 4 axils and 4 wheels.
   ///They are attached using hinge constraints. There are 2 hinge constraint relationships, Chassis-Axils and Axils-Wheels.
-  class inputs : public resource {
+  class ship_controls : public resource {
 
     app *the_app;
-    float angle_iteration = 0.01f;
+    float angle_iteration = 0.03f;
     float acceleration = 0.0f;
     float power = 2.0f;
 
   public:
-    inputs(){}
+    ship_controls(){}
 
     void init(app *app){
       this->the_app = app;
@@ -72,9 +72,9 @@ namespace octet {
 
       player_node->add_child(camera_node);
       camera_node->loadIdentity();
-      camera_node->translate(vec3(0.0f, 20.0f, -30.0f));
+      camera_node->translate(vec3(0.0f, 40.0f, -50.0f));
       camera_node->access_nodeToParent().rotateY(180);
-      camera_node->access_nodeToParent().rotateX(-30);
+      camera_node->access_nodeToParent().rotateX(-40);
 
       if (the_app->is_key_down(key_esc)){
         exit(1);
@@ -101,7 +101,7 @@ namespace octet {
       ship_node->apply_central_force(ship_node->get_z() * (accel));
     }
     //check if we need deconstructor
-    ~inputs() {}
+    ~ship_controls() {}
   };
 }
 #endif

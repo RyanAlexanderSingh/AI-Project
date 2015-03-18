@@ -14,12 +14,17 @@ namespace octet {
     // scene for drawing box
 
     //handles player controls
-    inputs inputs;
+    ship_controls s_controller;
 
     //scene node for the player
     ref<scene_node> player_node;
+
+    dynarray<scene_node*>enemy_nodes;
+    dynarray<enemies*> seek_enemies;
+
     //scene node for enemy
     ref<scene_node> enemy_node;
+
 
     ref<scene_node> test_particle;
     float oldMouseX = 0.0f;
@@ -65,20 +70,21 @@ namespace octet {
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
 
-      inputs.init(this);
+      s_controller.init(this);
 
       //create the node in the Player class
       player.init(this, app_scene);
       player.create_player();
       player_node = app_scene->get_mesh_instance(0)->get_node();
 
-      //create enemy
-      enemy1.init(this, app_scene);
-      enemy1.create_enemy1();
-      enemy_node = app_scene->get_mesh_instance(1)->get_node();
-
-
-
+      for (int i = 1; i < 10; ++i){
+        enemies *seek_enemy = new enemies();
+        seek_enemy->init(this, app_scene);
+        seek_enemy->create_seek_enemy();
+        seek_enemies.push_back(seek_enemy);
+        scene_node *enemy_node = app_scene->get_mesh_instance(i)->get_node();
+        enemy_nodes.push_back(enemy_node);
+      }
 
       ai.init(this, app_scene);
 
@@ -106,9 +112,11 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
-      inputs.update(player_node, the_camera->get_node());
+      s_controller.update(player_node, the_camera->get_node());
 
-      ai.find_player(player_node->get_position(), enemy_node->get_position(), enemy_node);
+      for (int i = 0; i < 9; ++i){
+        seek_enemies[i]->find_player(player_node, enemy_nodes[i]);
+      }
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
@@ -116,11 +124,13 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
 
-      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+     /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
       skybox->rotate(0.003f, vec3(1, 0, 0));
       skybox->rotate(0.003f, vec3(0, 1, 0));*/
     }
   };
 }
+
+
 
 #endif
