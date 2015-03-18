@@ -70,14 +70,14 @@ namespace octet {
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
 
-      s_controller.init(this);
+      
 
       //create the node in the Player class
       player.init(this, app_scene);
       player.create_player();
       player_node = app_scene->get_mesh_instance(0)->get_node();
 
-      for (int i = 1; i < 10; ++i){
+      for (int i = 1; i <= 6; ++i){
         enemies *seek_enemy = new enemies();
         seek_enemy->init(this, app_scene);
         seek_enemy->create_seek_enemy();
@@ -87,6 +87,7 @@ namespace octet {
       }
 
       ai.init(this, app_scene);
+      s_controller.init(this, app_scene);
 
       app_scene->create_default_camera_and_lights();
       the_camera = app_scene->get_camera_instance(0);
@@ -114,7 +115,7 @@ namespace octet {
 
       s_controller.update(player_node, the_camera->get_node());
 
-      for (int i = 0; i < 9; ++i){
+      for (int i = 0; i <= 5; ++i){
         seek_enemies[i]->find_player(player_node, enemy_nodes[i]);
       }
 

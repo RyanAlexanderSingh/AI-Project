@@ -32,7 +32,7 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      inputs.init(app);
+      inputs.init(app, app_scene);
     }
 
     //create a random seek enemy 
@@ -56,7 +56,7 @@ namespace octet {
 
     void find_player(scene_node *target_ship, scene_node *ai_ship){
       ai_ship->activate();
-      ai_ship->set_damping(0.5f, 0.5f);
+      ai_ship->set_damping(0.5f, 2.5f);
       ai_ship->set_friction(1.0f);
 
       vec3 targets_location = target_ship->get_position();
@@ -70,20 +70,20 @@ namespace octet {
       tempDegrees += 90.0f;
 
       if (tempDegrees <= 0.0f){
-        tempDegrees = 360 - (-tempDegrees);
+        tempDegrees = 360.0f - (-tempDegrees);
       }
 
       float angle_diff = oldAngle - tempDegrees;
       oldAngle = tempDegrees;
 
-      inputs.rotate(ai_ship, angle_diff);
-
       if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
         inputs.accelerate(ai_ship, 10.0f);
       }
       else{
-        ai_ship->set_damping(3.0f, 1.5f);
+        ai_ship->set_damping(5.0f, 3.5f);
       }
+     
+      inputs.rotate(ai_ship, angle_diff);
 
       //DEBUGGING   
       printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());

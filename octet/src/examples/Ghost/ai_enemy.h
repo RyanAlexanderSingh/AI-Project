@@ -31,7 +31,7 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      inputs.init(app);
+      inputs.init(app, app_scene);
     }
 
     void find_player(vec3 target_location, vec3 current_location, scene_node *enemy_ship){

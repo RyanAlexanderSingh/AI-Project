@@ -15,6 +15,7 @@ namespace octet {
   class ship_controls : public resource {
 
     app *the_app;
+    visual_scene *vs;
     float angle_iteration = 0.03f;
     float acceleration = 0.0f;
     float power = 2.0f;
@@ -22,8 +23,9 @@ namespace octet {
   public:
     ship_controls(){}
 
-    void init(app *app){
+    void init(app *app, visual_scene *vs){
       this->the_app = app;
+      this->vs = vs;
     }
 
     //called every frame to update the player physics
@@ -64,9 +66,12 @@ namespace octet {
         player_node->activate();
         player_node->apply_central_force(player_node->get_x() * (acceleration));
       }
+      if (the_app->is_key_going_down(' ')){
+        fire_projectile(player_node);
+      }
 
       else {
-        friction = 1.0f; 
+        friction = 1.0f;
       }
       player_node->set_friction(friction);
 
@@ -81,9 +86,20 @@ namespace octet {
       }
     }
 
-    void rotate(scene_node *player_node, float angle){
-      player_node->activate();
-      btTransform trans = player_node->get_rigid_body()->getCenterOfMassTransform();
+    void fire_projectile(scene_node *ship_node){
+      vec3 forward_vec = ship_node->get_position();
+      material *blue = new material(vec4(0, 0, 1, 1));
+      mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
+      mat4t location;
+      forward_vec.z() += 20.0f;
+      location.translate(forward_vec);
+      //location.rotateY(forward_vec.z());
+      vs->add_shape(location, sphere, blue, true);
+    }
+
+    void rotate(scene_node *ship_node, float angle){
+      ship_node->activate();
+      btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
       btQuaternion transrot = trans.getRotation();
       btQuaternion rotquat;
       rotquat = rotquat.getIdentity();
@@ -91,7 +107,7 @@ namespace octet {
 
       transrot = rotquat * transrot;
       trans.setRotation(transrot);
-      player_node->get_rigid_body()->setCenterOfMassTransform(trans);
+      ship_node->get_rigid_body()->setCenterOfMassTransform(trans);
     }
 
 
