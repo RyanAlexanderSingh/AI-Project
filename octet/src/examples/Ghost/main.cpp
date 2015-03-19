@@ -13,10 +13,10 @@
 #include "../../octet.h"
 
 #include "ship_controls.h"
-#include "planet.h"
-#include "ai_enemy.h"
 #include "player.h"
-#include "enemies.h"
+#include "enemy_boss.h"
+#include "enemy_flock.h"
+#include "enemy_speed.h"
 #include "ghost.h"
 
 

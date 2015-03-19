@@ -16,9 +16,10 @@ namespace octet {
 
     app *the_app;
     visual_scene *vs;
-    float angle_iteration = 0.03f;
+
     float acceleration = 0.0f;
-    float power = 2.0f;
+    const float angle_iteration = 0.03f;
+    const float power = 2.0f;
 
   public:
     ship_controls(){}
@@ -76,15 +77,14 @@ namespace octet {
 
       player_node->add_child(camera_node);
       camera_node->loadIdentity();
-      camera_node->translate(vec3(0.0f, 40.0f, -50.0f));
+      camera_node->translate(vec3(0.0f, 60.0f, -70.0f));
       camera_node->access_nodeToParent().rotateY(180);
-      camera_node->access_nodeToParent().rotateX(-40);
+      camera_node->access_nodeToParent().rotateX(-30);
 
       if (the_app->is_key_down(key_esc)){
         exit(1);
       }
     }
-
 
     void rotate(scene_node *ship_node, float angle){
       ship_node->activate();
@@ -97,7 +97,6 @@ namespace octet {
       trans.setRotation(transrot);
       ship_node->get_rigid_body()->setCenterOfMassTransform(trans);
     }
-
 
     //used to control the player but could also be used to control the AI ship movements
     void accelerate(scene_node *ship_node, float accel){

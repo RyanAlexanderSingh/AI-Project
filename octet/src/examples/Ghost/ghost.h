@@ -18,8 +18,8 @@ namespace octet {
     ref<scene_node> player_node;
 
     //arrays to store the seek enemies (objects)
-    dynarray<enemies*> seek_enemies;
-    ref<enemies> boss_enemy;
+    dynarray<enemy_speed*> seek_enemies;
+    ref<enemy_boss> boss_enemy;
 
     //only using this for the skybos
     collada_builder loader;
@@ -67,14 +67,14 @@ namespace octet {
       player.create_player();
       player_node = player.return_player_node();
 
-      for (int i = 1; i <= 6; ++i){
-        enemies *seek_enemy = new enemies();
+      for (int i = 0; i < 5; ++i){
+        enemy_speed *seek_enemy = new enemy_speed();
         seek_enemy->init(this, app_scene);
         seek_enemy->create_seek_enemy();
         seek_enemies.push_back(seek_enemy);
       }
 
-      boss_enemy = new enemies();
+      boss_enemy = new enemy_boss();
       boss_enemy->init(this, app_scene);
       boss_enemy->create_boss_enemy();
 
@@ -100,11 +100,11 @@ namespace octet {
 
       player.update();
 
-      for (int i = 0; i <= 5; ++i){
+      for (int i = 0; i < seek_enemies.size(); ++i){
         seek_enemies[i]->seek(player_node);
       }
 
-      boss_enemy->seek(player_node);
+      boss_enemy->update(player_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
