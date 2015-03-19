@@ -101,10 +101,10 @@ namespace octet {
       player.update();
 
       for (int i = 0; i <= 5; ++i){
-        seek_enemies[i]->face_player(player_node);
+        seek_enemies[i]->seek(player_node);
       }
 
-      boss_enemy->face_player(player_node);
+      boss_enemy->seek(player_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
