@@ -34,7 +34,7 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      inputs.init(app, vs);
+      inputs.init(app, app_scene);
     }
 
     //create a random seek enemy 
@@ -89,6 +89,7 @@ namespace octet {
       vec3 current_location = enemy_node->get_position();
 
       facingVec = targets_location - current_location;
+      facingVec = facingVec.normalize();
 
       float temp = atan2(facingVec.z(), facingVec.x());
       float tempDegrees = temp;
@@ -102,6 +103,8 @@ namespace octet {
       float angle_diff = oldAngle - tempDegrees;
       oldAngle = tempDegrees;
 
+      inputs.rotate(enemy_node, angle_diff);
+
       if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
         inputs.accelerate(enemy_node, 10.0f);
       }
@@ -109,8 +112,6 @@ namespace octet {
         enemy_node->set_damping(5.0f, 3.5f);
       }
      
-      inputs.rotate(enemy_node, angle_diff);
-
       //DEBUGGING   
       printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
       //printf("Degrees: %f\n", tempDegrees);
