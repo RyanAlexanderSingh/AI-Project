@@ -66,7 +66,7 @@ namespace octet {
       }
       
       //DEBUGGING   
-      printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
+      //printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
       //printf("Degrees: %f\n", tempDegrees);
       //printf("Degrees: %f\n", angle_diff);
     }

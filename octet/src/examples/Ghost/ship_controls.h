@@ -90,12 +90,10 @@ namespace octet {
       ship_node->activate();
       btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
       btQuaternion transrot = trans.getRotation();
-      btQuaternion rotquat;
-      rotquat = rotquat.getIdentity();
-      rotquat.setY(angle);
+      btQuaternion rotquat(btVector3(0, 1, 0), angle);
 
-      transrot = rotquat * transrot;
-      trans.setRotation(transrot);
+      transrot = transrot * rotquat;
+      trans.setRotation(transrot.normalized());
       ship_node->get_rigid_body()->setCenterOfMassTransform(trans);
     }
 

@@ -27,6 +27,8 @@ namespace octet {
     // scene for drawing box
     ref<visual_scene> app_scene;
 
+    bool test = true;
+
   public:
     /// this is called when we construct the class before everything is initialised.
     ghost(int argc, char **argv) : app(argc, argv) {
@@ -98,11 +100,16 @@ namespace octet {
 
       player.update();
 
-      for (int i = 0; i <= 5; ++i){
-        seek_enemies[i]->find_player(player_node);
-      }
+      /*for (int i = 0; i <= 1; ++i){
+        seek_enemies[i]->face_player(player_node);
+      }*/
 
-      boss_enemy->find_player(player_node);
+      /*if (test == true){
+      boss_enemy->face_player(player_node);
+      test = false;
+      }*/
+
+      boss_enemy->face_player(player_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);

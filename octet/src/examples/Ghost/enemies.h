@@ -80,7 +80,7 @@ namespace octet {
       return enemy_node;
     }
 
-    void find_player(scene_node *target_ship){
+    void face_player(scene_node *target_ship){
       enemy_node->activate();
       enemy_node->set_damping(0.5f, 2.5f);
       enemy_node->set_friction(1.0f);
@@ -91,29 +91,36 @@ namespace octet {
       facingVec = targets_location - current_location;
       facingVec = facingVec.normalize();
 
-      float temp = atan2(facingVec.z(), facingVec.x());
-      float tempDegrees = temp;
-
-      tempDegrees += 90.0f;
-
-      if (tempDegrees <= 0.0f){
-        tempDegrees = 360.0f - (-tempDegrees);
-      }
-
-      float angle_diff = oldAngle - tempDegrees;
-      oldAngle = tempDegrees;
+      float angle = atan2(facingVec.x(), -facingVec.z());
+      
+      //angle -= 3.14159265f * 0.5f;
+      float angle_diff = angle - oldAngle;
+      oldAngle = angle;
 
       inputs.rotate(enemy_node, angle_diff);
+      
+      printf("Angle: %f\n", angle);
 
-      if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
+      //inputs.rotate(enemy_node, angle_diff);
+      
+      //float tempDegrees = temp;
+
+      //tempDegrees += 90.0f;
+
+      /*float angle_diff = oldAngle - tempDegrees;
+      oldAngle = tempDegrees;*/
+
+      
+
+      /*if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
         inputs.accelerate(enemy_node, 10.0f);
       }
       else{
         enemy_node->set_damping(5.0f, 3.5f);
-      }
+      }*/
      
       //DEBUGGING   
-      printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
+      //printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
       //printf("Degrees: %f\n", tempDegrees);
       //printf("Degrees: %f\n", angle_diff);
     }
