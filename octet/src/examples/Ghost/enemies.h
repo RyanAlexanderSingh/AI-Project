@@ -89,11 +89,11 @@ namespace octet {
       vec3 current_location = enemy_node->get_position();
 
       facingVec = targets_location - current_location;
-      facingVec = facingVec.normalize();
+      //facingVec = facingVec.normalize();
 
-      float angle = atan2(facingVec.x(), -facingVec.z());
+      float angle = atan2(facingVec.x(), facingVec.z());
       
-      //angle -= 3.14159265f * 0.5f;
+      float angle_correction = 3.14159265f * 0.5f;
       float angle_diff = angle - oldAngle;
       oldAngle = angle;
 
