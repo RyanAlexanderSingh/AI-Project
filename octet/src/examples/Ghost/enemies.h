@@ -53,8 +53,6 @@ namespace octet {
       enemy_location.translate(vec3(rand_x, 100, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
       enemy_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
-
-      velocity = 
     }
 
     void create_boss_enemy(){
