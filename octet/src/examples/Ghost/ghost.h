@@ -11,35 +11,21 @@
 namespace octet {
   /// Scene containing a box with octet.
   class ghost : public app {
-    // scene for drawing box
 
-    //handles player controls
-    ship_controls s_controller;
-
+    //create default player
+    player player;
     //scene node for the player
     ref<scene_node> player_node;
 
     //arrays to store the seek enemies (objects)
     dynarray<enemies*> seek_enemies;
-
     ref<enemies> boss_enemy;
 
-    ref<scene_node> test_particle;
-    float oldMouseX = 0.0f;
-    float oldMouseY = 0.0f;
-
-    //camera instance
-    ref<camera_instance> the_camera;
-
+    //only using this for the skybos
     collada_builder loader;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
-
-    //create default player
-    player player;
-    enemies enemy1;
-    ai_enemy ai;
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -71,10 +57,13 @@ namespace octet {
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
 
+      app_scene->create_default_camera_and_lights();
+      app_scene->get_camera_instance(0)->set_far_plane(10000);
+
       //create the node in the Player class
       player.init(this, app_scene);
       player.create_player();
-      player_node = app_scene->get_mesh_instance(0)->get_node();
+      player_node = player.return_player_node();
 
       for (int i = 1; i <= 6; ++i){
         enemies *seek_enemy = new enemies();
@@ -86,14 +75,6 @@ namespace octet {
       boss_enemy = new enemies();
       boss_enemy->init(this, app_scene);
       boss_enemy->create_boss_enemy();
-      boss_node = boss_enemy->return_ship_node();
-
-      ai.init(this, app_scene);
-      s_controller.init(this, app_scene);
-
-      app_scene->create_default_camera_and_lights();
-      the_camera = app_scene->get_camera_instance(0);
-      the_camera->set_far_plane(10000);
 
       //skybox
       //create_skybox();
@@ -115,7 +96,7 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
-      s_controller.update(player_node, the_camera->get_node());
+      player.update();
 
       for (int i = 0; i <= 5; ++i){
         seek_enemies[i]->find_player(player_node);

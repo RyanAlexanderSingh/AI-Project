@@ -34,7 +34,7 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      inputs.init(app, app_scene);
+      inputs.init(app, vs);
     }
 
     //create a random seek enemy 
