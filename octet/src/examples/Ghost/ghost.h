@@ -19,12 +19,10 @@ namespace octet {
     //scene node for the player
     ref<scene_node> player_node;
 
-    dynarray<scene_node*>enemy_nodes;
+    //arrays to store the seek enemies (objects)
     dynarray<enemies*> seek_enemies;
 
-    //scene node for enemy
-    ref<scene_node> enemy_node;
-
+    ref<enemies> boss_enemy;
 
     ref<scene_node> test_particle;
     float oldMouseX = 0.0f;
@@ -57,11 +55,14 @@ namespace octet {
       resource_dict dict;
       loader.get_resources(dict);
 
+      // note that this call will dump the code below to log.txt
+      dict.dump_assets(log(""));
+
       mesh *player_mesh = dict.get_mesh("pSphere1-lib+lambert1");
       material *mat = new material(new image("assets/skybox.gif"));
       mat4t location;
       app_scene->add_shape(location, player_mesh, mat, true);
-      printf("loading extremely inefficient skybox");
+      printf("loading extremely inefficient skybox\n change the image...");
     }
 
     /// this is called once OpenGL is initialized
@@ -69,8 +70,6 @@ namespace octet {
 
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
-
-      
 
       //create the node in the Player class
       player.init(this, app_scene);
@@ -82,9 +81,12 @@ namespace octet {
         seek_enemy->init(this, app_scene);
         seek_enemy->create_seek_enemy();
         seek_enemies.push_back(seek_enemy);
-        scene_node *enemy_node = app_scene->get_mesh_instance(i)->get_node();
-        enemy_nodes.push_back(enemy_node);
       }
+
+      boss_enemy = new enemies();
+      boss_enemy->init(this, app_scene);
+      boss_enemy->create_boss_enemy();
+      boss_node = boss_enemy->return_ship_node();
 
       ai.init(this, app_scene);
       s_controller.init(this, app_scene);
@@ -116,8 +118,10 @@ namespace octet {
       s_controller.update(player_node, the_camera->get_node());
 
       for (int i = 0; i <= 5; ++i){
-        seek_enemies[i]->find_player(player_node, enemy_nodes[i]);
+        seek_enemies[i]->find_player(player_node);
       }
+
+      boss_enemy->find_player(player_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);

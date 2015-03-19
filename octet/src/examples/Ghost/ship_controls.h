@@ -67,7 +67,6 @@ namespace octet {
         player_node->apply_central_force(player_node->get_x() * (acceleration));
       }
       if (the_app->is_key_going_down(' ')){
-        fire_projectile(player_node);
       }
 
       else {
@@ -86,16 +85,6 @@ namespace octet {
       }
     }
 
-    void fire_projectile(scene_node *ship_node){
-      vec3 forward_vec = ship_node->get_position();
-      material *blue = new material(vec4(0, 0, 1, 1));
-      mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
-      mat4t location;
-      forward_vec.z() += 20.0f;
-      location.translate(forward_vec);
-      //location.rotateY(forward_vec.z());
-      vs->add_shape(location, sphere, blue, true);
-    }
 
     void rotate(scene_node *ship_node, float angle){
       ship_node->activate();
