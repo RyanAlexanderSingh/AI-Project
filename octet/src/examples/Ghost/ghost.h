@@ -100,14 +100,9 @@ namespace octet {
 
       player.update();
 
-      /*for (int i = 0; i <= 1; ++i){
+      for (int i = 0; i <= 5; ++i){
         seek_enemies[i]->face_player(player_node);
-      }*/
-
-      /*if (test == true){
-      boss_enemy->face_player(player_node);
-      test = false;
-      }*/
+      }
 
       boss_enemy->face_player(player_node);
 

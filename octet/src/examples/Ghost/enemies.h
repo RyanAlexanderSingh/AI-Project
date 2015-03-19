@@ -89,11 +89,9 @@ namespace octet {
       vec3 current_location = enemy_node->get_position();
 
       facingVec = targets_location - current_location;
-      //facingVec = facingVec.normalize();
 
       float angle = atan2(facingVec.x(), facingVec.z());
       
-      float angle_correction = 3.14159265f * 0.5f;
       float angle_diff = angle - oldAngle;
       oldAngle = angle;
 
@@ -101,23 +99,12 @@ namespace octet {
       
       printf("Angle: %f\n", angle);
 
-      //inputs.rotate(enemy_node, angle_diff);
-      
-      //float tempDegrees = temp;
-
-      //tempDegrees += 90.0f;
-
-      /*float angle_diff = oldAngle - tempDegrees;
-      oldAngle = tempDegrees;*/
-
-      
-
-      /*if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
+      if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
         inputs.accelerate(enemy_node, 10.0f);
       }
       else{
         enemy_node->set_damping(5.0f, 3.5f);
-      }*/
+      }
      
       //DEBUGGING   
       //printf("Distance:%f, %f, %f\n", facingVec.x(), facingVec.y(), facingVec.z());
