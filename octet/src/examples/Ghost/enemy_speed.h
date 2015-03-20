@@ -13,7 +13,6 @@ namespace octet {
 
   class enemy_speed : public resource {
 
-    collada_builder loader;
     app *the_app;
     visual_scene *app_scene;
 

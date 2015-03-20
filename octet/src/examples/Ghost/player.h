@@ -12,10 +12,12 @@ namespace octet {
 
   class player : public resource {
 
+    
+    ships the_player;
+    
     //handles player controls
     ship_controls inputs;
 
-    collada_builder loader;
     app *the_app;
     visual_scene *app_scene;
 
@@ -35,24 +37,16 @@ namespace octet {
       this->app_scene = vs;
 
       the_camera = app_scene->get_camera_instance(0)->get_node();
+      the_player.init(the_app, app_scene);
+      inputs.init(the_app, app_scene);
 
-      inputs.init(app, vs);
+      //create the player mesh and scene node
+      init_player_ship();
     }
 
-    void create_player(){
-      if (!loader.load_xml("assets/SpaceShip.dae")) {
-        printf("failed to load file player ship!\n");
-        exit(1);
-      }
-      resource_dict dict;
-      loader.get_resources(dict);
-
-      mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/playerShip_test.jpg"));
-      mat4t location;
-      location.translate(vec3(0, 100, 0));
-      app_scene->add_shape(location, player_mesh, mat, false);
-      player_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances()-1)->get_node();
+    void init_player_ship(){
+      the_player.create_player();
+      player_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
     void update(){    
