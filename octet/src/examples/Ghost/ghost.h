@@ -70,13 +70,11 @@ namespace octet {
       for (int i = 0; i < 5; ++i){
         enemy_speed *seek_enemy = new enemy_speed();
         seek_enemy->init(this, app_scene);
-        seek_enemy->create_seek_enemy();
         seek_enemies.push_back(seek_enemy);
       }
 
       boss_enemy = new enemy_boss();
       boss_enemy->init(this, app_scene);
-      boss_enemy->create_boss_enemy();
 
       //skybox
       //create_skybox();
@@ -101,7 +99,7 @@ namespace octet {
       player.update();
 
       for (int i = 0; i < seek_enemies.size(); ++i){
-        seek_enemies[i]->seek(player_node);
+        seek_enemies[i]->update(player_node);
       }
 
       boss_enemy->update(player_node);

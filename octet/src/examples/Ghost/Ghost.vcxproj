@@ -220,6 +220,7 @@
     <ClInclude Include="enemy_boss.h" />
     <ClInclude Include="enemy_flock.h" />
     <ClInclude Include="ghost.h" />
+    <ClInclude Include="ships.h" />
     <ClInclude Include="ship_controls.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="enemy_speed.h" />
