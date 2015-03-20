@@ -15,13 +15,14 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
+    ships boss_ship;
     ship_controls inputs;
 
     ref<scene_node> enemy_node;
 
     //subject to change
     float heading = 0.0f;
-    float velocity = 0.0f;
+    float agro_range = 25.0f;
 
   public:
     enemy_boss(){}
@@ -30,22 +31,14 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
+      boss_ship.init(the_app, app_scene);
       inputs.init(app, app_scene);
+
+      init_boss_enemy();
     }
 
-    void create_boss_enemy(){
-      if (!loader.load_xml("assets/boss_ship.dae")) {
-        printf("failed to load file player ship!\n");
-        exit(1);
-      }
-      resource_dict dict;
-      loader.get_resources(dict);
-
-      mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
-      mat4t enemy_location;;
-      enemy_location.translate(vec3(200.0f, 100.0f, 400.0f));
-      app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
+    void init_boss_enemy(){
+      boss_ship.create_boss_enemy();
       enemy_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
@@ -62,8 +55,8 @@ namespace octet {
       vec3 facingVec = target_ship->get_position() - enemy_node->get_position();
 
       //if the player is in range, start to seek him out
-      if ((facingVec.x() < 50.0f && facingVec.x() > 0.0f) || (facingVec.z() < 50.0f && facingVec.z() > 0.0f) ||
-        (facingVec.x() > -50.0f && facingVec.x() < 0.0f) || (facingVec.z() > -50.0f && facingVec.z() < 0.0f))
+      if ((facingVec.x() < agro_range && facingVec.x() > 0.0f) || (facingVec.z() < agro_range && facingVec.z() > agro_range) ||
+        (facingVec.x() > -agro_range && facingVec.x() < 0.0f) || (facingVec.z() > -agro_range && facingVec.z() < agro_range))
       {
         seek(target_ship, facingVec);
       }
