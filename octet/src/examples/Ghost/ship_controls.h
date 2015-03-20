@@ -20,6 +20,7 @@ namespace octet {
     float acceleration = 0.0f;
     const float angle_iteration = 0.03f;
     const float power = 2.0f;
+    bool alternate_camera = true;
 
   public:
     ship_controls(){}
@@ -69,7 +70,6 @@ namespace octet {
       }
       if (the_app->is_key_going_down(' ')){
       }
-
       else {
         friction = 1.0f;
       }
@@ -77,9 +77,23 @@ namespace octet {
 
       player_node->add_child(camera_node);
       camera_node->loadIdentity();
-      camera_node->translate(vec3(0.0f, 60.0f, -70.0f));
-      camera_node->access_nodeToParent().rotateY(180);
-      camera_node->access_nodeToParent().rotateX(-30);
+
+      if (the_app->is_key_going_down('P')){
+        alternate_camera = !alternate_camera;
+      }
+
+      //behind ship
+      if (alternate_camera){
+        camera_node->translate(vec3(0.0f, 60.0f, -70.0f));
+        camera_node->access_nodeToParent().rotateY(180);
+        camera_node->access_nodeToParent().rotateX(-30);
+      }
+      //above camera
+      else{
+        camera_node->translate(vec3(0.0f, 200.0f, 0.0f));
+        camera_node->access_nodeToParent().rotateY(180.0f);
+        camera_node->access_nodeToParent().rotateX(-90.0f);
+      }
 
       if (the_app->is_key_down(key_esc)){
         exit(1);
@@ -92,7 +106,6 @@ namespace octet {
       btQuaternion transrot = trans.getRotation();
       //create a new quaternion with an angle on y
       btQuaternion rotquat(btVector3(0, 1, 0), angle);
-
       transrot = transrot * rotquat;
       trans.setRotation(transrot);
       ship_node->get_rigid_body()->setCenterOfMassTransform(trans);

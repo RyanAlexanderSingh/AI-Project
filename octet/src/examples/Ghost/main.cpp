@@ -12,6 +12,7 @@
 
 #include "../../octet.h"
 
+#include "ships.h"
 #include "ship_controls.h"
 #include "player.h"
 #include "enemy_boss.h"
