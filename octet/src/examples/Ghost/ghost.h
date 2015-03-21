@@ -79,16 +79,6 @@ namespace octet {
 
       //skybox
       //create_skybox();
-
-      material *blue = new material(vec4(0, 0, 1, 1));
-      mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.2f);
-      for (int i = -10; i <= 10; ++i) {
-        for (int j = -10; j <= 10; ++j) {
-          mat4t location;
-          location.translate((float)i, 70, (float)j);
-          app_scene->add_shape(location, sphere, blue, true);
-        }
-      }
     }
 
     /// this is called to draw the world
@@ -110,9 +100,9 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
 
-     /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
-      skybox->rotate(0.003f, vec3(1, 0, 0));
-      skybox->rotate(0.003f, vec3(0, 1, 0));*/
+      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+       skybox->rotate(0.003f, vec3(1, 0, 0));
+       skybox->rotate(0.003f, vec3(0, 1, 0));*/
     }
   };
 }

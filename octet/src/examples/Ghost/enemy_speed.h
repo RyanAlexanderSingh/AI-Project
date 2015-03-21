@@ -61,28 +61,6 @@ namespace octet {
       //seek(target_ship);  
     }
 
-    void seek(scene_node *target_ship){
-      ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
-      ship_node->set_friction(1.0f);
-
-      vec3 facingVec = target_ship->get_position() - ship_node->get_position();
-
-      float angle = atan2(facingVec.x(), facingVec.z());
-      
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
-
-      inputs.rotate(ship_node, angle_diff);
-    
-      if (facingVec.x() > 10.0f || facingVec.z() > 10.0f || facingVec.x() < -10.0f || facingVec.z() < -10.0f){
-        inputs.accelerate(ship_node, 10.0f);
-      }
-      else{
-        ship_node->set_damping(2.0f, 0.5f);
-      }
-    }
-
     ~enemy_speed() {
     }
   };

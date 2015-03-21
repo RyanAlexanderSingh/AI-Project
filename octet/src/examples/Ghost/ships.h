@@ -38,7 +38,6 @@ namespace octet {
       mat4t location;
       location.translate(vec3(0, 100, 0));
       app_scene->add_shape(location, player_mesh, mat, false);
-     
     }
 
     //create a big boss enemy
