@@ -23,12 +23,25 @@ namespace octet {
 
     //subject to change
     float current_angle = 0.0f;
-    float velocity = 0.0f;
+
+    float wandertheta = 0.0f;
+    vec3 acceleration = (0.0f, 0.0f, 0.0f);
+    vec3 velocity = (0.0f, 0.0f, 0.0f);
 
     const vec3 agro_range = (100.0f, 0.0f, 100.0f);
 
   public:
     enemy_speed(){}
+
+    //predefined to pass back random numbers bettwen -0.2f and 0.2f
+    float random_float() {
+      srand(time(0));
+      float rand_num = 0;
+      rand_num = rand() % 20 - 10; //gives me a number between -30 and 30;
+      rand_num = rand_num / 100.0f;
+      /*printf("random number: %f \n", rand_num);*/
+      return rand_num;
+    }
 
     void init(app *app, visual_scene *vs){
       this->the_app = app;
@@ -51,7 +64,50 @@ namespace octet {
     }
 
     void update(scene_node *target_ship){
-      seek(target_ship);
+      
+      //velocity += acceleration;
+      wander();
+      //seek(target_ship);
+     
+    }
+
+    void wander(){
+      float wanderR = 5.0f;         // Radius for our "wander circle"
+      float wanderD = 16.0f;         // Distance for our "wander circle
+
+      wandertheta += random_float();
+
+      vec3 circleloc = enemy_node->get_z();
+      circleloc.normalize();
+      circleloc *= wanderD;
+      circleloc += enemy_node->get_position();
+
+      vec3 forwardVec = enemy_node->get_z();
+
+      float h = atan2(forwardVec.x(), forwardVec.z());
+      vec3 circleOffSet = (wanderR * cos(wandertheta + h), 0.0f,  wanderR * sin(wandertheta + h));
+      vec3 target = circleloc + circleOffSet;
+
+      printf("Current Position: %f %f \n", enemy_node->get_position().x(), enemy_node->get_position().z());
+      printf("Target: %f %f \n", target.x(), target.z());
+
+      wander_seek(target);
+    }
+
+    void wander_seek(vec3 wander_target){
+      enemy_node->activate();
+      enemy_node->set_damping(0.5f, 0.5f);
+      enemy_node->set_friction(1.0f);
+
+      vec3 facingVec = wander_target - enemy_node->get_position();
+
+      float angle = atan2(facingVec.x(), facingVec.z());
+
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
+
+      inputs.rotate(enemy_node, angle_diff);
+      inputs.accelerate(enemy_node, 4.0f);
     }
 
     void seek(scene_node *target_ship){
@@ -65,6 +121,7 @@ namespace octet {
       
       float angle_diff = angle - current_angle;
       current_angle = angle;
+
 
       inputs.rotate(enemy_node, angle_diff);
     

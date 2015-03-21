@@ -62,17 +62,18 @@ namespace octet {
       app_scene->create_default_camera_and_lights();
       app_scene->get_camera_instance(0)->set_far_plane(10000);
 
-      //create the node in the Player class
+      //create the player ship
       player.init(this, app_scene);
-      player.create_player();
       player_node = player.return_player_node();
 
-      for (int i = 0; i < 5; ++i){
+      //create the speed enemy ships
+      for (int i = 0; i < 1; ++i){
         enemy_speed *seek_enemy = new enemy_speed();
         seek_enemy->init(this, app_scene);
         seek_enemies.push_back(seek_enemy);
       }
 
+      //create the boss ship
       boss_enemy = new enemy_boss();
       boss_enemy->init(this, app_scene);
 
@@ -96,13 +97,12 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
+      //update our ships
       player.update();
-
+      boss_enemy->update(player_node);
       for (int i = 0; i < seek_enemies.size(); ++i){
         seek_enemies[i]->update(player_node);
       }
-
-      boss_enemy->update(player_node);
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f / 30);
