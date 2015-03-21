@@ -12,44 +12,64 @@ namespace octet {
 
   class ai_behaviours : public resource {
 
-    ships the_player;
-
     //handles player controls
     ship_controls inputs;
 
     app *the_app;
     visual_scene *app_scene;
 
-    ref<scene_node> player_node;
-    //camera instance
-    ref<scene_node> the_camera;
+    //variables for wandering
+    float wandertheta = 0.0f;
+
+    float current_angle = 0.0f;
 
   public:
     ai_behaviours(){}
 
-    scene_node *return_player_node(){
-      return player_node;
+    //predefined to pass back random numbers bettwen -0.1f and 0.1f
+    float random_float() {
+      srand(static_cast <unsigned> (time(0)));
+      //float rand_num = 0;
+      //rand_num = rand() % 10 - 5; //gives me a number between -10 and 10;
+      //rand_num = rand_num / 100.0f;
+
+      float r3 = -0.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.2f - -0.2f)));
+      printf("random number: %f \n", r3);
+      return r3;
     }
 
-    void init(app *app, visual_scene *vs){
-      this->the_app = app;
-      this->app_scene = vs;
+    void wander(scene_node *ship_node){
+      float wander_radius = 5.0f;         // radius for our "wander circle"
+      float wander_distance = 16.0f;         // distance for our "wander circle
 
-      the_camera = app_scene->get_camera_instance(0)->get_node();
-      the_player.init(the_app, app_scene);
-      inputs.init(the_app, app_scene);
+      wandertheta += random_float(); //get a random float back between 
 
-      //create the player mesh and scene node
-      init_player_ship();
-    }
+      vec3 circleloc = ship_node->get_z();
+      circleloc.normalize();
+      circleloc *= wander_distance;
+      circleloc += ship_node->get_position();
 
-    void init_player_ship(){
-      the_player.create_player();
-      player_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
-    }
+      vec3 forwardVec = ship_node->get_z();
 
-    void update(){
-      inputs.update(player_node, the_camera);
+      float h = atan2(forwardVec.x(), forwardVec.z());
+      vec3 circleOffSet = (wander_radius * cos(wandertheta + h), 0.0f, wander_radius * sin(wandertheta + h));
+      vec3 target = circleloc + circleOffSet;
+
+      /*printf("Current Position: %f %f \n", enemy_node->get_position().x(), enemy_node->get_position().z());
+      printf("Target: %f %f \n", target.x(), target.z());*/
+
+      ship_node->activate();
+      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_friction(1.0f);
+
+      vec3 facingVec = target - ship_node->get_position();
+
+      float angle = atan2(facingVec.x(), facingVec.z());
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
+
+      inputs.rotate(ship_node, angle_diff);
+      inputs.accelerate(ship_node, 4.0f);
     }
 
     ~ai_behaviours() {

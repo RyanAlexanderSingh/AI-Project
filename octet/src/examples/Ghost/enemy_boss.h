@@ -19,6 +19,7 @@ namespace octet {
 
     ref<scene_node> enemy_node;
 
+    float current_angle = 0.0f; 
     float agro_range = 25.0f;
 
   public:
@@ -66,8 +67,8 @@ namespace octet {
     void seek(scene_node *target_ship, vec3 facingVec){
 
       float angle = atan2(facingVec.x(), facingVec.z());
-      float angle_diff = angle - heading;
-      heading = angle;
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
 
       inputs.rotate(enemy_node, angle_diff);
       inputs.accelerate(enemy_node, 6.0f);
