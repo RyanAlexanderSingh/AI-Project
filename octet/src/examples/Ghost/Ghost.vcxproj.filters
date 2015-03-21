@@ -434,6 +434,7 @@
     <ClInclude Include="enemy_boss.h" />
     <ClInclude Include="enemy_flock.h" />
     <ClInclude Include="ships.h" />
+    <ClInclude Include="ai_behaviours.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

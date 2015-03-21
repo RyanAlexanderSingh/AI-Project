@@ -19,8 +19,6 @@ namespace octet {
 
     ref<scene_node> enemy_node;
 
-    //subject to change
-    float heading = 0.0f;
     float agro_range = 25.0f;
 
   public:

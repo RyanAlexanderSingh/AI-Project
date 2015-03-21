@@ -217,6 +217,7 @@
     <ClInclude Include="..\..\shaders\shader.h" />
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
+    <ClInclude Include="ai_behaviours.h" />
     <ClInclude Include="enemy_boss.h" />
     <ClInclude Include="enemy_flock.h" />
     <ClInclude Include="ghost.h" />

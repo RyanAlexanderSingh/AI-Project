@@ -11,8 +11,7 @@
 namespace octet {
 
   class player : public resource {
-
-    
+ 
     ships the_player;
     
     //handles player controls

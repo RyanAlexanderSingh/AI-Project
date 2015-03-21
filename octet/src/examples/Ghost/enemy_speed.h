@@ -19,6 +19,8 @@ namespace octet {
     ships speed_ship;
     ship_controls inputs;
 
+    ai_behaviors ai;
+
     ref<scene_node> enemy_node;
 
     //subject to change
@@ -33,14 +35,16 @@ namespace octet {
   public:
     enemy_speed(){}
 
-    //predefined to pass back random numbers bettwen -0.2f and 0.2f
+    //predefined to pass back random numbers bettwen -0.1f and 0.1f
     float random_float() {
-      srand(time(0));
-      float rand_num = 0;
-      rand_num = rand() % 20 - 10; //gives me a number between -30 and 30;
-      rand_num = rand_num / 100.0f;
-      /*printf("random number: %f \n", rand_num);*/
-      return rand_num;
+      srand(static_cast <unsigned> (time(0)));
+      //float rand_num = 0;
+      //rand_num = rand() % 10 - 5; //gives me a number between -10 and 10;
+      //rand_num = rand_num / 100.0f;
+
+      float r3 = -0.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.2f - -0.2f)));     
+      printf("random number: %f \n", r3);
+      return r3;
     }
 
     void init(app *app, visual_scene *vs){
@@ -72,29 +76,29 @@ namespace octet {
     }
 
     void wander(){
-      float wanderR = 5.0f;         // Radius for our "wander circle"
-      float wanderD = 16.0f;         // Distance for our "wander circle
+      float wander_radius = 5.0f;         // radius for our "wander circle"
+      float wander_distance = 16.0f;         // distance for our "wander circle
 
-      wandertheta += random_float();
+      wandertheta += random_float(); //get a random float back between 
 
       vec3 circleloc = enemy_node->get_z();
       circleloc.normalize();
-      circleloc *= wanderD;
+      circleloc *= wander_distance;
       circleloc += enemy_node->get_position();
 
       vec3 forwardVec = enemy_node->get_z();
 
       float h = atan2(forwardVec.x(), forwardVec.z());
-      vec3 circleOffSet = (wanderR * cos(wandertheta + h), 0.0f,  wanderR * sin(wandertheta + h));
+      vec3 circleOffSet = (wander_radius * cos(wandertheta + h), 0.0f, wander_radius * sin(wandertheta + h));
       vec3 target = circleloc + circleOffSet;
 
-      printf("Current Position: %f %f \n", enemy_node->get_position().x(), enemy_node->get_position().z());
-      printf("Target: %f %f \n", target.x(), target.z());
+      /*printf("Current Position: %f %f \n", enemy_node->get_position().x(), enemy_node->get_position().z());
+      printf("Target: %f %f \n", target.x(), target.z());*/
 
-      wander_seek(target);
+      wander(target);
     }
 
-    void wander_seek(vec3 wander_target){
+    void wander(vec3 wander_target){
       enemy_node->activate();
       enemy_node->set_damping(0.5f, 0.5f);
       enemy_node->set_friction(1.0f);
@@ -121,7 +125,6 @@ namespace octet {
       
       float angle_diff = angle - current_angle;
       current_angle = angle;
-
 
       inputs.rotate(enemy_node, angle_diff);
     
