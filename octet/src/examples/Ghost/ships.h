@@ -2,7 +2,8 @@
 //
 // (C) Ryan Singh 2015
 //
-// Ships created here
+// Creation of different types of ships are here
+// Currently creating Player Ship, Seek Ship, Boss Ship, Third Ship??
 //
 #ifndef SHIPS_H_INCLUDED
 #define SHIPS_H_INCLUDED
@@ -17,6 +18,8 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
+    scene_node radar;
+
   public:
     ships(){}
 
@@ -25,6 +28,15 @@ namespace octet {
       this->app_scene = vs;
     }
 
+    void create_radar(float agro_range){
+      mesh_box *radar_mesh = new mesh_box(vec3(agro_range*1.5f, 0.0f, agro_range*1.5f));
+      material *circle = new material(new image("assets/circle.gif"));
+      mat4t location;
+      location.translate(0.0f, -2.0f, 0.0f);
+      app_scene->add_shape(location, radar_mesh, circle, false, false);
+    }
+
+    //create a player node
     void create_player(){
       if (!loader.load_xml("assets/SpaceShip.dae")) {
         printf("failed to load file player ship!\n");
@@ -36,7 +48,6 @@ namespace octet {
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/playerShip_test.jpg"));
       mat4t location;
-      location.translate(vec3(0, 100, 0));
       app_scene->add_shape(location, player_mesh, mat, false);
     }
 
@@ -53,7 +64,7 @@ namespace octet {
       material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
    
       mat4t enemy_location;
-      enemy_location.translate(vec3(125.0f, 100.0f, 125.0f));
+      enemy_location.translate(vec3(50.0f, 0.0f, 50.0f));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 
@@ -72,7 +83,7 @@ namespace octet {
       float rand_x = float(rand() % 100);
       float rand_z = float(rand() % 100);
       mat4t enemy_location;
-      enemy_location.translate(vec3(rand_x, 100.0f, rand_z));
+      enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 
@@ -91,7 +102,7 @@ namespace octet {
       float rand_x = float(rand() % 100);
       float rand_z = float(rand() % 100);
       mat4t enemy_location;
-      enemy_location.translate(vec3(rand_x, 100.0f, rand_z));
+      enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
     ~ships() {

@@ -303,7 +303,7 @@ namespace octet { namespace scene {
     }
 
     /// helper to add a mesh to a scene and also to create the corresponding physics object
-    mesh_instance *add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic=false, float mass=1, collison_shape_t *shape=NULL) {
+    mesh_instance *add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic=false, bool create_physics=true, float mass=1, collison_shape_t *shape=NULL) {
       scene_node *node = new scene_node(this);
       node->access_nodeToParent() = mat;
 
@@ -317,6 +317,7 @@ namespace octet { namespace scene {
         btMatrix3x3 matrix(get_btMatrix3x3(mat));
         btVector3 pos(get_btVector3(mat[3].xyz()));
 
+        if (create_physics){
         if (shape == NULL) {
           shape = is_dynamic ? msh->get_bullet_shape() : msh->get_static_bullet_shape();
         }
@@ -335,6 +336,7 @@ namespace octet { namespace scene {
           world->addRigidBody(rigid_body);
           rigid_body->setUserPointer(node);
           node->set_rigid_body(rigid_body);
+          }
         }
       #endif
       return result;
@@ -406,7 +408,7 @@ namespace octet { namespace scene {
 
       /// default light instance
       if (light_instances.size() == 0) {
-        scene_node *node = add_scene_node();
+       /* scene_node *node = add_scene_node();
         light *_light = new light();
         light_instance *li = new light_instance();
         node->access_nodeToParent().translate(100, 100, 100);
@@ -416,7 +418,7 @@ namespace octet { namespace scene {
         _light->set_kind(atom_directional);
         li->set_node(node);
         li->set_light(_light);
-        light_instances.push_back(li);
+        light_instances.push_back(li);*/
       }
 
       if (!object_shader) {

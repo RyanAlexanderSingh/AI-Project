@@ -21,6 +21,7 @@ namespace octet {
     visual_scene *app_scene;
 
     ref<scene_node> player_node;
+    ref<scene_node> radar;
     //camera instance
     ref<scene_node> the_camera;
 
@@ -46,6 +47,7 @@ namespace octet {
     void init_player_ship(){
       the_player.create_player();
       player_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
+      
     }
 
     void update(){    
