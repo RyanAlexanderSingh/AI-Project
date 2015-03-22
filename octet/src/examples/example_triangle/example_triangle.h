@@ -8,8 +8,9 @@ namespace octet {
   /// Drawing a triangle without a scene
   class example_triangle : public app {
     // a very basic color shader
-    ref<color_shader> shader;
     GLuint vertices;
+    int test = 0.0f;
+
   public:
     /// this is called when we construct the class before everything is initialised.
     example_triangle(int argc, char **argv) : app(argc, argv) {
@@ -17,20 +18,30 @@ namespace octet {
 
     /// this is called once OpenGL is initialized
     void app_init() {
-      shader = new color_shader();
 
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
-      // corners (vertices) of the triangle
-      static const float vertex_data[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-      };
+      GLfloat vertex_data[722];
+
+      vertex_data[0] = 0.0f;
+      vertex_data[1] = 0.0f;
+      vertex_data[1] = 0.0f;
+      for (int i = 0; i < 720; i += 3) {
+        vertex_data[i + 1] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 2);
+        vertex_data[i + 2] = 0.0f;
+        vertex_data[i + 3] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 2);
+      }
+      // 2 vertices to close the circle so it looks perfect
+      vertex_data[719] = 0.0f;
+      vertex_data[720] = 0.0f;
+      vertex_data[721] = 2.0f;
+
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
+
+   
 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
@@ -48,13 +59,6 @@ namespace octet {
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
-      // we use a unit matrix will not change the (-1..1, -1..1, -1..1) xyz space of OpenGL
-      mat4t modelToProjection;
-
-      // we use a simple solid color shader.
-      vec4 emissive_color(0, 0, 0, 1);
-      shader->render(modelToProjection, emissive_color);
-
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
       glEnableVertexAttribArray(0);
 
@@ -62,10 +66,10 @@ namespace octet {
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), NULL);
-
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8, NULL);
+      glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
       // draw a triangle
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawArrays(GL_POINTS, 0, 361);
     }
   };
 }
