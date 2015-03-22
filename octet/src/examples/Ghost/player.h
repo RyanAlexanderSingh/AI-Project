@@ -21,7 +21,6 @@ namespace octet {
     visual_scene *app_scene;
 
     ref<scene_node> player_node;
-    ref<scene_node> radar;
     //camera instance
     ref<scene_node> the_camera;
 
@@ -36,22 +35,23 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      the_camera = app_scene->get_camera_instance(0)->get_node();
       the_player.init(the_app, app_scene);
-      inputs.init(the_app, app_scene);
-
       //create the player mesh and scene node
       init_player_ship();
+
+      inputs.init(the_app, app_scene);
+
+      the_camera = app_scene->get_camera_instance(0)->get_node();
     }
 
     void init_player_ship(){
       the_player.create_player();
       player_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
-      
     }
 
     void update(){    
       inputs.update(player_node, the_camera);
+      the_player.update_triangle(player_node->access_nodeToParent());
     }
 
     ~player() {

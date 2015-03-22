@@ -26,11 +26,15 @@ namespace octet {
   public:
     enemy_speed(){}
 
+    scene_node *return_ship_node(){
+      return ship_node;
+    }
+
     void init(app *app, visual_scene *vs){
       this->the_app = app;
       this->app_scene = vs;
 
-      speed_ship.init(app, app_scene);
+      speed_ship.init(the_app, app_scene);
       init_seek_enemy();
     }
 
@@ -38,17 +42,12 @@ namespace octet {
     void init_seek_enemy(){
       speed_ship.create_seek_enemy();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
-      //create a radar for the enemy_speed ships
-    }
-
-    scene_node *return_ship_node(){
-      return ship_node;
     }
 
     void update(scene_node *target_ship){
       
-      ai.wander(ship_node);
-      //seek(target_ship);  
+      ai.wander(ship_node); 
+      speed_ship.update_triangle(ship_node->access_nodeToParent());
     }
 
     ~enemy_speed() {

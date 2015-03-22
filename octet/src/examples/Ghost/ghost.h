@@ -26,9 +26,7 @@ namespace octet {
 
     // scene for drawing box
     ref<visual_scene> app_scene;
-    //shaders for the agro radius circles
-    ref<color_shader> shader;
-    GLuint vertices;
+   
 
     //only using this for the skybox (think about moving this)
     collada_builder loader;
@@ -60,61 +58,16 @@ namespace octet {
     }
 
 
-    void update_circles(){
-      /// clear the background and the depth buffer
-      glClearColor(0, 0, 0, 1);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-      /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
-      //glEnable(GL_DEPTH_TEST);
-
-      // we use a unit matrix will not change the (-1..1, -1..1, -1..1) xyz space of OpenGL
-      mat4t modelToProjection;
-
-      // we use a simple solid color shader.
-      vec4 emissive_color(0, 0, 1, 1);
-      shader->render(modelToProjection, emissive_color);
-
-      // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
-      glEnableVertexAttribArray(0);
-
-      // use the buffer we made earlier.
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
-
-      // draw a triangle
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-    }
-
     /// this is called once OpenGL is initialized
     void app_init() {
 
       app_scene = new visual_scene();
       app_scene->set_world_gravity(btVector3(0, 0, 0));
-      shader = new color_shader();
-
-      glGenBuffers(1, &vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      // corners (vertices) of the triangle
-      static const float vertex_data[] = {
-        -1.5f, -1.5f, 1.0f,
-        1.5f, -1.5f, 1.0f,
-        1.0f, 1.5f, 1.0f,
-      };
-
-      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
-
+      
       app_scene->create_default_camera_and_lights();
       app_scene->get_camera_instance(0)->set_far_plane(10000);
 
       ai.init(); //essentially just creating the random seed
-
-      //create the player ship
-      player.init(this, app_scene);
-      player_node = player.return_player_node();
 
       //create the speed enemy ships
       for (int i = 0; i < 5; ++i){
@@ -127,6 +80,10 @@ namespace octet {
       boss_enemy = new enemy_boss();
       boss_enemy->init(this, app_scene);
 
+      //create the player ship
+      player.init(this, app_scene);
+      player_node = player.return_player_node();
+
       //skybox
       //create_skybox();
     }
@@ -136,11 +93,6 @@ namespace octet {
       int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
-
-      /// set a viewport - includes whole window area
-      glViewport(0, 0, vx, vy);
-
-      update_circles();
 
       //update our ships
       player.update();
@@ -154,7 +106,7 @@ namespace octet {
 
       // draw the scene
       app_scene->render((float)vx / vy);
-
+      
       /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
        skybox->rotate(0.003f, vec3(1, 0, 0));
        skybox->rotate(0.003f, vec3(0, 1, 0));*/
