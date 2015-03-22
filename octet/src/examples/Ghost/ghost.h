@@ -69,7 +69,7 @@ namespace octet {
 
       ai.init(); //essentially just creating the random seed
 
-      //create the speed enemy ships
+      ////create the speed enemy ships
       for (int i = 0; i < 5; ++i){
         enemy_speed *seek_enemy = new enemy_speed();
         seek_enemy->init(this, app_scene);

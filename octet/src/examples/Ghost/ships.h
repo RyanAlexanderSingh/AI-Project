@@ -8,6 +8,8 @@
 #ifndef SHIPS_H_INCLUDED
 #define SHIPS_H_INCLUDED
 
+
+
 #include <random>
 
 namespace octet {
@@ -29,24 +31,25 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      shader = new color_shader();
+      //shader = new color_shader();
 
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       // corners (vertices) of the triangle
       static const float vertex_data[] = {
-        -1.5f, -1.5f, 0.0f,
-        1.5f, -1.5f, 0.0f,
-        0.0f, 1.5f, 0.0f,
+        -10.5f, 0.0f, -10.5f,
+        10.5f, 0.0f, -10.5f,
+        0.0f, 0.0f, 10.5f,
       };
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
 
-    void update_triangle(mat4t modelToProjection){
+    void update_triangle(){
       /// clear the background and the depth buffer
-      glClearColor(0, 0, 0, 1);
+
+      //glClearColor(0, 0, 0, 1);
       //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
@@ -56,8 +59,8 @@ namespace octet {
       /*mat4t modelToProjection;*/
 
       // we use a simple solid color shader.
-      vec4 emissive_color(0, 0, 1, 1);
-      shader->render(modelToProjection, emissive_color);
+      /*vec4 emissive_color(0, 0, 1, 1);
+      shader->render(modelToProjection, emissive_color);*/
 
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
       glEnableVertexAttribArray(0);
@@ -69,7 +72,7 @@ namespace octet {
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 
       // draw a triangle
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawArrays(GL_LINE_STRIP, 0, 3);
     }
 
 

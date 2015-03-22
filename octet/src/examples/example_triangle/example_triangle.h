@@ -42,7 +42,7 @@ namespace octet {
       glViewport(0, 0, vx, vy);
 
       /// clear the background and the depth buffer
-      glClearColor(0, 0, 1, 1);
+      glClearColor(0, 1, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
@@ -52,7 +52,7 @@ namespace octet {
       mat4t modelToProjection;
 
       // we use a simple solid color shader.
-      vec4 emissive_color(1, 1, 0, 1);
+      vec4 emissive_color(0, 0, 0, 1);
       shader->render(modelToProjection, emissive_color);
 
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)

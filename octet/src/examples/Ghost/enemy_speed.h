@@ -47,7 +47,6 @@ namespace octet {
     void update(scene_node *target_ship){
       
       ai.wander(ship_node); 
-      speed_ship.update_triangle(ship_node->access_nodeToParent());
     }
 
     ~enemy_speed() {

@@ -408,7 +408,7 @@ namespace octet { namespace scene {
 
       /// default light instance
       if (light_instances.size() == 0) {
-       /* scene_node *node = add_scene_node();
+        scene_node *node = add_scene_node();
         light *_light = new light();
         light_instance *li = new light_instance();
         node->access_nodeToParent().translate(100, 100, 100);
@@ -418,7 +418,7 @@ namespace octet { namespace scene {
         _light->set_kind(atom_directional);
         li->set_node(node);
         li->set_light(_light);
-        light_instances.push_back(li);*/
+        light_instances.push_back(li);
       }
 
       if (!object_shader) {

@@ -34,21 +34,6 @@ namespace octet {
 
       boss_ship.init(the_app, app_scene);
       init_boss_enemy();
-
-      //TEST
-      boss_shader = new color_shader();
-
-      glGenBuffers(1, &boss_vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, boss_vertices);
-
-      // corners (vertices) of the triangle
-      static const float vertex_boss_data[] = {
-        -1.5f, -1.5f, 0.0f,
-        1.5f, -1.5f, 0.0f,
-        0.0f, 1.5f, 0.0f,
-      };
-
-      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_boss_data), vertex_boss_data, GL_STATIC_DRAW);
     }
 
     void init_boss_enemy(){
@@ -62,6 +47,7 @@ namespace octet {
 
     void update(scene_node *target_ship){
 
+      //boss_ship.update_triangle();
       vec3 facingVec = target_ship->get_position() - ship_node->get_position();
       //if the player is in range, start to seek him out
       if ((facingVec.x() < agro_range && facingVec.x() > 0.0f) || (facingVec.z() < agro_range && facingVec.z() > 0.0f) ||

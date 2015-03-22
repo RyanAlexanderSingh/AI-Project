@@ -51,7 +51,7 @@ namespace octet {
 
     void update(){    
       inputs.update(player_node, the_camera);
-      the_player.update_triangle(player_node->access_nodeToParent());
+      the_player.update_triangle();
     }
 
     ~player() {
