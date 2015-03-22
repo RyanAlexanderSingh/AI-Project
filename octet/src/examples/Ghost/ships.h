@@ -36,8 +36,15 @@ namespace octet {
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
+      //// corners (vertices) of the triangle
+      //static const float vertex_data[9] = {
+      //  -10.5f, 0.0f, -10.5f,
+      //  10.5f, 0.0f, -10.5f,
+      //  0.0f, 0.0f, 10.5f,
+      //};
+
       // corners (vertices) of the triangle
-      static const float vertex_data[] = {
+      float vertex_data[9] = {
         -10.5f, 0.0f, -10.5f,
         10.5f, 0.0f, -10.5f,
         0.0f, 0.0f, 10.5f,
@@ -72,7 +79,7 @@ namespace octet {
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 
       // draw a triangle
-      glDrawArrays(GL_LINE_STRIP, 0, 3);
+      glDrawArrays(GL_LINE_LOOP, 0, 3);
     }
 
 
