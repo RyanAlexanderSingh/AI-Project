@@ -38,30 +38,19 @@ namespace octet {
       GLfloat vertex_data[722];
 
       for (int i = 0; i < 720; i += 3) {
-        vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 30);
+        vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
         vertex_data[i + 1] = 0.0f;
-        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 30);
+        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
       }
-
-      vertex_data[719] = 0.0f;
-      vertex_data[720] = 30.0f; //x position
+      //vertex_data[719] = 0.0f;
+      //vertex_data[720] = 30.0f; //x position
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
 
     void update_triangle(){
-      /// clear the background and the depth buffer
-      /// set a viewport - includes whole window area
-      int vx = 0, vy = 0;
-      the_app->get_viewport_size(vx, vy);
-      glViewport(0, 0, vx, vy);
-
-      /// clear the background and the depth buffer
-      /*glClearColor(0, 1, 1, 1);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
-      //glEnable(GL_DEPTH_TEST);
+      glEnable(GL_DEPTH_TEST);
 
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
       glEnableVertexAttribArray(0);

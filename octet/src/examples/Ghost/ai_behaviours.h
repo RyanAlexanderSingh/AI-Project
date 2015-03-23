@@ -26,7 +26,7 @@ namespace octet {
   public:
     ai_behaviours(){}
 
-    //predefined to pass back random numbers bettwen -0.1f and 0.1f
+    //predefined to pass back random numbers bettwen -0.15f and 0.15f
     float random_float() {
       float rand_num = 0;
       rand_num = rand() % 10 - 5; //gives me a number between -10 and 10;
@@ -43,9 +43,17 @@ namespace octet {
 
     //Basic wandering behaviours
     void wander(scene_node *ship_node){
+      vec3 target = (0.0f, 0.0f, 0.0f);
+    //basic "keep within the boundaries" wandering
+      float ship_x = ship_node->get_position().x();
+      float ship_z = ship_node->get_position().z();
+      if (ship_x > 200.0f || ship_z > 200.0f || ship_x < -200.0f || ship_z < -200.0f){
+        target.x() = -ship_x;
+        target.z() = -ship_z;
+      }
+      else{
       float wander_radius = 5.0f;         // radius for our "wander circle"
       float wander_distance = 17.0f;         // distance for our "wander circle
-
       wandertheta += random_float(); //get a random float back between 
 
       vec3 circleloc = ship_node->get_z(); //get forward vector
@@ -57,8 +65,8 @@ namespace octet {
 
       float h = atan2(forwardVec.x(), forwardVec.z()); //need to know heading to offset wandertheta
       vec3 circleOffSet = (wander_radius * cos(wandertheta + h), 0.0f, wander_radius * sin(wandertheta + h));
-      vec3 target = circleloc + circleOffSet; //our final target to aim for
-
+      target = circleloc + circleOffSet; //our final target to aim for
+      }
       //activate bullet physics
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
