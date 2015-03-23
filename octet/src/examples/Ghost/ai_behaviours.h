@@ -21,6 +21,7 @@ namespace octet {
     //variables for wandering
     float wandertheta = 0.0f;
 
+    //for wandering
     float current_angle = 0.0f;
 
   public:
@@ -94,7 +95,24 @@ namespace octet {
 
       float angle_diff = angle - current_angle;
       current_angle = angle;
+      
+      inputs.rotate(ship_node, angle_diff);
+      inputs.accelerate(ship_node, 4.0f);
+    }
 
+    //Basic flee behaviours, the opposite of seek
+    void flee(scene_node *ship_node, scene_node *enemy_ship, vec3 facingVector){
+      ship_node->activate();
+      //ship_node->set_damping(0.5f, 0.5f);
+      //ship_node->set_friction(1.0f);
+
+      vec3 facingVec = ship_node->get_position() - enemy_ship->get_position();
+
+      float angle = atan2(facingVec.x(), facingVec.z());
+
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
+      
       inputs.rotate(ship_node, angle_diff);
       inputs.accelerate(ship_node, 10.0f);
     }

@@ -24,9 +24,7 @@ namespace octet {
     ref<color_shader> shader;
     GLuint vertices;
     int test = 0.0f;
-    
-    color_shader shader;
-
+   
   public:
     ships(){}
 
@@ -51,7 +49,7 @@ namespace octet {
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
 
-    void update_triangle(){
+    void update_agro_circle(){
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 

@@ -51,7 +51,7 @@ namespace octet {
 
     void update(){    
       inputs.update(player_node, the_camera);
-      the_player.update_triangle();
+      the_player.update_agro_circle();
     }
 
     ~player() {

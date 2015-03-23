@@ -96,7 +96,7 @@ namespace octet {
 
       //update our ships
       player.update();
-      //boss_enemy->update(player_node);
+      boss_enemy->update(player_node);
       for (int i = 0; i < seek_enemies.size(); ++i){
         seek_enemies[i]->update(player_node);
       }
