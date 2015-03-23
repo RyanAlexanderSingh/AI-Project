@@ -23,6 +23,7 @@ namespace octet {
     //shaders for the agro radius circles
     ref<color_shader> shader;
     GLuint vertices;
+    int test = 0.0f;
 
   public:
     ships(){}
@@ -36,16 +37,14 @@ namespace octet {
 
       GLfloat vertex_data[722];
 
-      vertex_data[0] = 0.0f;
-      vertex_data[1] = 0.0f;
       for (int i = 0; i < 720; i += 3) {
         vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 30);
         vertex_data[i + 1] = 0.0f;
         vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 30);
       }
-      vertex_data[720] = 0.0f;
-      //vertex_data[721] = 30.0f;
 
+      vertex_data[719] = 0.0f;
+      vertex_data[720] = 30.0f; //x position
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
@@ -71,10 +70,10 @@ namespace octet {
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, NULL);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
       glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
       // draw a triangle
-      glDrawArrays(GL_POINTS, 0, 361);
+      glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
 
     //create a player node
