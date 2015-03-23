@@ -218,13 +218,13 @@
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
     <ClInclude Include="ai_behaviours.h" />
-    <ClInclude Include="enemy_boss.h" />
-    <ClInclude Include="enemy_flock.h" />
+    <ClInclude Include="boss_ship.h" />
+    <ClInclude Include="civilian_ship.h" />
     <ClInclude Include="ghost.h" />
     <ClInclude Include="ships.h" />
     <ClInclude Include="ship_controls.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="enemy_speed.h" />
+    <ClInclude Include="merc_ship.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl" />

@@ -44,7 +44,7 @@ namespace octet {
     //Basic wandering behaviours
     void wander(scene_node *ship_node){
       vec3 target = (0.0f, 0.0f, 0.0f);
-    //basic "keep within the boundaries" wandering
+      //basic "keep within the boundaries" wandering
       float ship_x = ship_node->get_position().x();
       float ship_z = ship_node->get_position().z();
       if (ship_x > 200.0f || ship_z > 200.0f || ship_x < -200.0f || ship_z < -200.0f){
@@ -52,20 +52,20 @@ namespace octet {
         target.z() = -ship_z;
       }
       else{
-      float wander_radius = 5.0f;         // radius for our "wander circle"
-      float wander_distance = 17.0f;         // distance for our "wander circle
-      wandertheta += random_float(); //get a random float back between 
+        float wander_radius = 5.0f;         // radius for our "wander circle"
+        float wander_distance = 17.0f;         // distance for our "wander circle
+        wandertheta += random_float(); //get a random float back between 
 
-      vec3 circleloc = ship_node->get_z(); //get forward vector
-      circleloc.normalize(); 
-      circleloc *= wander_distance; //multiply by distance 
-      circleloc += ship_node->get_position(); //make it relative to the ship nodes location
+        vec3 circleloc = ship_node->get_z(); //get forward vector
+        circleloc.normalize();
+        circleloc *= wander_distance; //multiply by distance 
+        circleloc += ship_node->get_position(); //make it relative to the ship nodes location
 
-      vec3 forwardVec = ship_node->get_z(); //get forward vector again
+        vec3 forwardVec = ship_node->get_z(); //get forward vector again
 
-      float h = atan2(forwardVec.x(), forwardVec.z()); //need to know heading to offset wandertheta
-      vec3 circleOffSet = (wander_radius * cos(wandertheta + h), 0.0f, wander_radius * sin(wandertheta + h));
-      target = circleloc + circleOffSet; //our final target to aim for
+        float heading = atan2(forwardVec.x(), forwardVec.z()); //need to know heading to offset wandertheta
+        vec3 circleOffSet = (wander_radius * cos(wandertheta + heading), 0.0f, wander_radius * sin(wandertheta + heading));
+        target = circleloc + circleOffSet; //our final target to aim for
       }
       //activate bullet physics
       ship_node->activate();

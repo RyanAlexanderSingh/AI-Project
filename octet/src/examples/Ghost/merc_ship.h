@@ -4,14 +4,14 @@
 //
 // Speedy ships
 //
-#ifndef ENEMY_SPEED_H_INCLUDED
-#define ENEMY_SPEED_H_INCLUDED
+#ifndef MERC_SHIP_H_INCLUDED
+#define MERC_SHIP_H_INCLUDED
 
 #include <random>
 
 namespace octet {
 
-  class enemy_speed : public resource {
+  class merc_ship : public resource {
 
     app *the_app;
     visual_scene *app_scene;
@@ -24,7 +24,7 @@ namespace octet {
     const float agro_range = 15.0f;
 
   public:
-    enemy_speed(){}
+    merc_ship(){}
 
     scene_node *return_ship_node(){
       return ship_node;
@@ -49,7 +49,7 @@ namespace octet {
       ai.wander(ship_node); 
     }
 
-    ~enemy_speed() {
+    ~merc_ship() {
     }
   };
 }

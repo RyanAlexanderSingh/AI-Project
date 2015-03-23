@@ -4,14 +4,14 @@
 //
 // Speedy ships
 //
-#ifndef ENEMY_FLOCK_H_INCLUDED
-#define ENEMY_FLOCK_H_INCLUDED
+#ifndef CIVILIAN_SHIP_H_INCLUDED
+#define CIVILIAN_SHIP_H_INCLUDED
 
 #include <random>
 
 namespace octet {
 
-  class enemy_flock : public resource {
+  class civilian_ship: public resource {
 
     collada_builder loader;
     app *the_app;
@@ -26,7 +26,7 @@ namespace octet {
     float velocity = 0.0f;
 
   public:
-    enemy_flock(){}
+    civilian_ship(){}
 
     void init(app *app, visual_scene *vs){
       this->the_app = app;
@@ -100,7 +100,7 @@ namespace octet {
       }
     }
 
-    ~enemy_flock() {
+    ~civilian_ship() {
     }
   };
 }

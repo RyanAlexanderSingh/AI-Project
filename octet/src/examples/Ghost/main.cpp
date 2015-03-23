@@ -16,9 +16,9 @@
 #include "ship_controls.h"
 #include "ai_behaviours.h"
 #include "player.h"
-#include "enemy_boss.h"
-#include "enemy_flock.h"
-#include "enemy_speed.h"
+#include "boss_ship.h"
+#include "merc_ship.h"
+#include "civilian_ship.h"
 #include "ghost.h"
 
 

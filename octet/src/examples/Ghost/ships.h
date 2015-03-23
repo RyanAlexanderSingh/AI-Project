@@ -24,6 +24,8 @@ namespace octet {
     ref<color_shader> shader;
     GLuint vertices;
     int test = 0.0f;
+    
+    color_shader shader;
 
   public:
     ships(){}
@@ -41,6 +43,7 @@ namespace octet {
         vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
         vertex_data[i + 1] = 0.0f;
         vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
+        printf("%i\n", i);
       }
       //vertex_data[719] = 0.0f;
       //vertex_data[720] = 30.0f; //x position

@@ -21,8 +21,8 @@ namespace octet {
     ref<scene_node> player_node;
 
     //arrays to store the seek enemies (objects)
-    dynarray<enemy_speed*> seek_enemies;
-    ref<enemy_boss> boss_enemy;
+    dynarray<merc_ship*> seek_enemies;
+    ref<boss_ship> boss_enemy;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
@@ -71,13 +71,13 @@ namespace octet {
 
       ////create the speed enemy ships
       for (int i = 0; i < 5; ++i){
-        enemy_speed *seek_enemy = new enemy_speed();
+        merc_ship *seek_enemy = new merc_ship();
         seek_enemy->init(this, app_scene);
         seek_enemies.push_back(seek_enemy);
       }
 
       //create the boss ship
-      boss_enemy = new enemy_boss();
+      boss_enemy = new boss_ship();
       boss_enemy->init(this, app_scene);
 
       //create the player ship
@@ -96,7 +96,7 @@ namespace octet {
 
       //update our ships
       player.update();
-      boss_enemy->update(player_node);
+      //boss_enemy->update(player_node);
       for (int i = 0; i < seek_enemies.size(); ++i){
         seek_enemies[i]->update(player_node);
       }
@@ -107,9 +107,9 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
       
-      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+      scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
        skybox->rotate(0.003f, vec3(1, 0, 0));
-       skybox->rotate(0.003f, vec3(0, 1, 0));*/
+       skybox->rotate(0.003f, vec3(0, 1, 0));
     }
   };
 }

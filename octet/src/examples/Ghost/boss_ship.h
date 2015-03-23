@@ -9,12 +9,12 @@
 
 namespace octet {
 
-  class enemy_boss : public resource {
+  class boss_ship : public resource {
 
     app *the_app;
     visual_scene *app_scene;
 
-    ships boss_ship;
+    ships boss;
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
@@ -26,18 +26,18 @@ namespace octet {
     const float agro_range = 25.0f;
 
   public:
-    enemy_boss(){}
+    boss_ship(){}
 
     void init(app *app, visual_scene *vs){
       this->the_app = app;
       this->app_scene = vs;
 
-      boss_ship.init(the_app, app_scene);
+      boss.init(the_app, app_scene);
       init_boss_enemy();
     }
 
     void init_boss_enemy(){
-      boss_ship.create_boss_enemy();
+      boss.create_boss_enemy();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
@@ -60,7 +60,7 @@ namespace octet {
       }
     }
 
-    ~enemy_boss() {
+    ~boss_ship() {
     }
   };
 }
