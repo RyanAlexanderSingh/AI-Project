@@ -2,7 +2,7 @@
 //
 // (C) Ryan Singh 2015
 //
-// Speedy ships
+// Big bad boss ship - stay clear of this
 //
 #ifndef ENEMY_BOSS_H_INCLUDED
 #define ENEMY_BOSS_H_INCLUDED
@@ -23,7 +23,7 @@ namespace octet {
     ref<color_shader> boss_shader;
     GLuint boss_vertices;
 
-    const float agro_range = 25.0f;
+    const float agro_range = 40.0f;
 
   public:
     boss_ship(){}
@@ -52,15 +52,10 @@ namespace octet {
       vec3 facingVec = enemy_position - ship_node->get_position();
       float diff_x = facingVec.x();
       float diff_z = facingVec.z();
-
       //check if its within the range to run away from them
-      if ((diff_x > -25.0f && diff_x < 25.0f) && (diff_z > -25.0f && diff_z < 25.0f)){
+      if ((diff_x > -agro_range && diff_x < agro_range) && (diff_z > -agro_range && diff_z < agro_range)){
         //if the player is in range, flee from him 
-        ai.flee(ship_node, facingVec);
-        printf("diff x: %f\n", diff_x);
-        printf("diff z: %f\n", diff_z);
-        //if the player is within range, seek
-        //ai.seek(ship_node, target_ship, facingVec);
+        ai.seek(ship_node, facingVec);
       }
       else{
         ai.wander(ship_node);

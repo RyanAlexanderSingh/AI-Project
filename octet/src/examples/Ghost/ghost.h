@@ -23,10 +23,12 @@ namespace octet {
     //arrays to store the NPC's
     dynarray<merc_ship*> merc_array;
     ref<boss_ship> boss_enemy;
-    dynarray<civilian_ship*> civilian_array;
-
     //our array for storing all of the enemies
     dynarray<scene_node*> enemies;
+
+    //for the civilians
+    dynarray<civilian_ship*> civilian_array;
+    dynarray<scene_node*> civilians;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
@@ -80,13 +82,14 @@ namespace octet {
       //create the boss ship
       boss_enemy = new boss_ship();
       boss_enemy->init(this, app_scene);
-      //enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
+      enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
 
       //create the civilian ships
-      for (int i = 0; i < 4; ++i){
+      for (int i = 0; i < 20; ++i){
         civilian_ship *civilian = new civilian_ship();
-        civilian->init(this, app_scene);
-        civilian_array.push_back(civilian); 
+        civilian->init(this, app_scene); //let the civilians know who the enemies are 
+        civilians.push_back(civilian->return_ship_node());
+        civilian_array.push_back(civilian);        
       }
       //create the player ship
       player.init(this, app_scene);
@@ -105,13 +108,14 @@ namespace octet {
       //update our ships
       player.update();
       //update the enemies
-      boss_enemy->update(player_node);
-      for (unsigned i = 0; i < merc_array.size(); ++i){
-        merc_array[i]->update(player_node);
+      //boss_enemy->update(player_node);
+      for (int i = 0; i < merc_array.size(); ++i){
+        //lets get the civilian scene nodes
+        merc_array[i]->update(civilians, player_node);
       }
       //update the civilians
-      for (unsigned i = 0; i < 1; ++i){
-        civilian_array[i]->update(enemies);
+      for (unsigned i = 0; i < civilian_array.size(); ++i){
+        civilian_array[i]->update(enemies, player_node);
       }
 
       // update matrices. assume 30 fps.

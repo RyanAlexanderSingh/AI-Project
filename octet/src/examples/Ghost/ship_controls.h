@@ -98,6 +98,9 @@ namespace octet {
       if (the_app->is_key_down(key_esc)){
         exit(1);
       }
+      btTransform trans = player_node->get_rigid_body()->getCenterOfMassTransform();
+      btQuaternion transrot = trans.getRotation();
+      printf("Rotation: %f\n", transrot.getAngle());
     }
 
     void rotate(scene_node *ship_node, float angle){

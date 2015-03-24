@@ -68,6 +68,7 @@ namespace octet {
         vec3 circleOffSet = (wander_radius * cos(wandertheta + heading), 0.0f, wander_radius * sin(wandertheta + heading));
         target = circleloc + circleOffSet; //our final target to aim for
       }
+
       //activate bullet physics
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
@@ -99,18 +100,36 @@ namespace octet {
     }
 
     //Basic flee behaviours, the opposite of seek
-    void flee(scene_node *ship_node, vec3 facingVector){
+    void flee(scene_node *ship_node, scene_node *enemy){
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
 
-      vec3 opposite_facingVec = -facingVector;
-      float angle = atan2(opposite_facingVec.x(), opposite_facingVec.z());
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
+      vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
+      float angle = atan2(oppositeVec.x(), oppositeVec.z());
+
+      btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
+      btQuaternion transrot = trans.getRotation();
+      float angle_diff = angle - transrot.getAngle();
+      //current_angle = angle;
       
       inputs.rotate(ship_node, angle_diff);
-      inputs.accelerate(ship_node, 4.0f);
+      inputs.accelerate(ship_node, 20.0f);
+    }
+
+    //This will be the shooting function - currently just looking at the ship
+    //there will be a chance the merc will attack a civilian (add this later)
+    void shoot(scene_node *ship_node, vec3 facingVector){
+      ship_node->activate();
+      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_friction(1.0f);
+
+      float angle = atan2(facingVector.x(), facingVector.z());
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
+
+      inputs.rotate(ship_node, angle_diff);
+      //inputs.accelerate(ship_node, 20.0f);
     }
 
     ~ai_behaviours() {
