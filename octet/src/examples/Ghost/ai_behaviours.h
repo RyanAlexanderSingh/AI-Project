@@ -43,7 +43,7 @@ namespace octet {
     }
 
     //Basic wandering behaviours
-    void wander(scene_node *ship_node){
+    void wander(scene_node *ship_node, float speed=4.0f){
       vec3 target = (0.0f, 0.0f, 0.0f);
       //basic "keep within the boundaries" wandering
       float ship_x = ship_node->get_position().x();
@@ -80,11 +80,11 @@ namespace octet {
       current_angle = angle;
 
       inputs.rotate(ship_node, angle_diff);
-      inputs.accelerate(ship_node, 4.0f);
+      inputs.accelerate(ship_node, speed);
     }
 
     //Basic seek behaviours 
-    void seek(scene_node *ship_node, scene_node *target_ship, vec3 facingVector){
+    void seek(scene_node *ship_node, vec3 facingVector){
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
@@ -99,18 +99,18 @@ namespace octet {
     }
 
     //Basic flee behaviours, the opposite of seek
-    void flee(scene_node *ship_node, scene_node *enemy_ship, vec3 facingVector){
+    void flee(scene_node *ship_node, vec3 facingVector){
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
 
-      float angle = atan2(facingVector.x(), facingVector.z());
-
+      vec3 opposite_facingVec = -facingVector;
+      float angle = atan2(opposite_facingVec.x(), opposite_facingVec.z());
       float angle_diff = angle - current_angle;
       current_angle = angle;
       
       inputs.rotate(ship_node, angle_diff);
-      inputs.accelerate(ship_node, 10.0f);
+      inputs.accelerate(ship_node, 4.0f);
     }
 
     ~ai_behaviours() {

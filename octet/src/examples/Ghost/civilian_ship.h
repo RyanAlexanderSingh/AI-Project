@@ -20,6 +20,7 @@ namespace octet {
     ref<scene_node> ship_node;
 
     const float agro_range = 25.0f;
+    const float speed = 2.0f;
 
   public:
     civilian_ship(){}
@@ -33,7 +34,7 @@ namespace octet {
     }
 
     void init_boss_enemy(){
-      civilian.create_random_ship();
+      civilian.create_civilian_ship();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
@@ -42,20 +43,19 @@ namespace octet {
     }
 
     //civilian ships are scared of everything except the player
-    void update(scene_node *target_ship){
+    void update(dynarray<scene_node*> enemies){
 
-      boss.update_agro_circle();
-      vec3 facingVec = target_ship->get_position() - ship_node->get_position();
-      float ship_x = facingVec.x();
-      float ship_z = facingVec.z();
-      if ((ship_x < agro_range && ship_x > 0.0f) || (ship_z < agro_range && ship_z > 0.0f) ||
-        (ship_x > -agro_range && ship_x < 0.0f) || (ship_z > -agro_range && ship_z < 0.0f))
-      {
-        //if any enemy is in range, flee from him 
-        ai.flee(ship_node, target_ship, facingVec);
-      }
-      else{
-        ai.wander(ship_node);
+      for (int i = 0; i < enemies.size(); ++i){
+        vec3 enemy_position = enemies[i]->get_position();
+        //we're only interested in the difference in the x and z axis
+        vec3 facingVec = enemy_position - ship_node->get_position();
+        //check if its within the range to run away from them
+        if ((facingVec.x() > -agro_range && facingVec.x() < agro_range) && (facingVec.z() > -agro_range && facingVec.z() < agro_range)){
+          ai.flee(ship_node, facingVec);
+        }
+        else{
+          ai.wander(ship_node, speed);
+        }
       }
     }
 

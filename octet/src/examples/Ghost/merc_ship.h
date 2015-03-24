@@ -45,7 +45,7 @@ namespace octet {
     }
 
     void update(scene_node *target_ship){
-      ai.wander(ship_node); 
+      ai.wander(ship_node, 6.0f); 
     }
 
     ~merc_ship() {

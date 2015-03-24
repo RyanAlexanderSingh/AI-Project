@@ -47,15 +47,18 @@ namespace octet {
 
     void update(scene_node *target_ship){
 
-      boss.update_agro_circle();
-      vec3 facingVec = target_ship->get_position() - ship_node->get_position();
-      float ship_x = facingVec.x();
-      float ship_z = facingVec.z();
-      if ((ship_x < agro_range && ship_x > 0.0f) || (ship_z < agro_range && ship_z > 0.0f) ||
-        (ship_x > -agro_range && ship_x < 0.0f) || (ship_z > -agro_range && ship_z < 0.0f))
-      {
+      vec3 enemy_position = target_ship->get_position();
+      //we're only interested in the difference in the x and z axis
+      vec3 facingVec = enemy_position - ship_node->get_position();
+      float diff_x = facingVec.x();
+      float diff_z = facingVec.z();
+
+      //check if its within the range to run away from them
+      if ((diff_x > -25.0f && diff_x < 25.0f) && (diff_z > -25.0f && diff_z < 25.0f)){
         //if the player is in range, flee from him 
-        ai.seek(ship_node, target_ship, facingVec);
+        ai.flee(ship_node, facingVec);
+        printf("diff x: %f\n", diff_x);
+        printf("diff z: %f\n", diff_z);
         //if the player is within range, seek
         //ai.seek(ship_node, target_ship, facingVec);
       }

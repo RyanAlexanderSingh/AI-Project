@@ -22,16 +22,17 @@ namespace octet {
 
     //arrays to store the NPC's
     dynarray<merc_ship*> merc_array;
-    dynarray<civilian_ship*> civilian_array;
     ref<boss_ship> boss_enemy;
+    dynarray<civilian_ship*> civilian_array;
+
+    //our array for storing all of the enemies
+    dynarray<scene_node*> enemies;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
 
     //only using this for the skybox (think about moving this)
     collada_builder loader;
-
-    bool test = true;
 
   public:
     /// this is called when we construct the class before everything is initialised.
@@ -57,7 +58,6 @@ namespace octet {
       printf("loading extremely inefficient skybox\n change the image...");
     }
 
-
     /// this is called once OpenGL is initialized
     void app_init() {
 
@@ -74,19 +74,20 @@ namespace octet {
         merc_ship *merc = new merc_ship();
         merc->init(this, app_scene);
         merc_array.push_back(merc);
-      }
-
-      //create the civilian ships
-      for (int i = 0; i < 4; ++i){
-        civilian_ship *civilian = new civilian_ship();
-        civilian->init(this, app_scene);
-        civilian_array.push_back(civilian);
+        enemies.push_back(merc->return_ship_node());  //lets add the enemies to the array so we can check all enemies
       }
 
       //create the boss ship
       boss_enemy = new boss_ship();
       boss_enemy->init(this, app_scene);
+      //enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
 
+      //create the civilian ships
+      for (int i = 0; i < 4; ++i){
+        civilian_ship *civilian = new civilian_ship();
+        civilian->init(this, app_scene);
+        civilian_array.push_back(civilian); 
+      }
       //create the player ship
       player.init(this, app_scene);
       player_node = player.return_player_node();
@@ -103,12 +104,14 @@ namespace octet {
 
       //update our ships
       player.update();
+      //update the enemies
       boss_enemy->update(player_node);
       for (unsigned i = 0; i < merc_array.size(); ++i){
         merc_array[i]->update(player_node);
       }
-      for (unsigned i = 0; i < civilian_array.size(); ++i){
-        civilian_array[i]->update(player_node);
+      //update the civilians
+      for (unsigned i = 0; i < 1; ++i){
+        civilian_array[i]->update(enemies);
       }
 
       // update matrices. assume 30 fps.

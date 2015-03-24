@@ -70,7 +70,6 @@ namespace octet {
       }
       resource_dict dict;
       loader.get_resources(dict);
-
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/playerShip_test.jpg"));
       mat4t location;
@@ -88,9 +87,8 @@ namespace octet {
 
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
-
       mat4t enemy_location;
-      enemy_location.translate(vec3(50.0f, 0.0f, 50.0f));
+      enemy_location.translate(vec3(200.0f, 0.0f, 200.0f));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 
@@ -106,7 +104,7 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
 
-      float rand_x = float(rand() % 200 + -200);
+      float rand_x = float(rand() % 200);
       float rand_z = float(rand() % 200 + -200);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));

@@ -46,13 +46,13 @@ namespace octet {
         if (acceleration < 10.0f){
           acceleration += power;
         }
-        accelerate(player_node, acceleration);
+        accelerate(player_node, 20);
       }
       else if (the_app->is_key_down('S')) {
         if (acceleration > -10.0f){
           acceleration -= power;
         }
-        accelerate(player_node, acceleration);
+        accelerate(player_node, 20);
       }
       else if (the_app->is_key_down('Q')) {
         if (acceleration > -10.0f){
@@ -84,13 +84,13 @@ namespace octet {
 
       //behind ship
       if (alternate_camera){
-        camera_node->translate(vec3(0.0f, 60.0f, -70.0f));
+        camera_node->translate(vec3(0.0f, 80.0f, -130.0f));
         camera_node->access_nodeToParent().rotateY(180);
-        camera_node->access_nodeToParent().rotateX(-30);
+        camera_node->access_nodeToParent().rotateX(-20);
       }
       //above camera
       else{
-        camera_node->translate(vec3(0.0f, 200.0f, 0.0f));
+        camera_node->translate(vec3(0.0f, 300.0f, 0.0f));
         camera_node->access_nodeToParent().rotateY(180.0f);
         camera_node->access_nodeToParent().rotateX(-90.0f);
       }
