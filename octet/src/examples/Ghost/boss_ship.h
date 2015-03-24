@@ -47,6 +47,7 @@ namespace octet {
 
     void update(scene_node *target_ship){
 
+      boss.update_agro_circle();
       vec3 facingVec = target_ship->get_position() - ship_node->get_position();
       float ship_x = facingVec.x();
       float ship_z = facingVec.z();
@@ -54,15 +55,12 @@ namespace octet {
         (ship_x > -agro_range && ship_x < 0.0f) || (ship_z > -agro_range && ship_z < 0.0f))
       {
         //if the player is in range, flee from him 
-        ai.flee(ship_node, target_ship, facingVec);
-        printf("State Fleeing\n");
+        ai.seek(ship_node, target_ship, facingVec);
         //if the player is within range, seek
         //ai.seek(ship_node, target_ship, facingVec);
       }
       else{
-        printf("State Wandering\n");
         ai.wander(ship_node);
-        //printf("wandering...");
       }
     }
 

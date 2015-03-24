@@ -48,7 +48,7 @@ namespace octet {
       //basic "keep within the boundaries" wandering
       float ship_x = ship_node->get_position().x();
       float ship_z = ship_node->get_position().z();
-      if (ship_x > 200.0f || ship_z > 200.0f || ship_x < -200.0f || ship_z < -200.0f){
+      if (ship_x > 300.0f || ship_z > 300.0f || ship_x < -300.0f || ship_z < -300.0f){
         target.x() = -ship_x;
         target.z() = -ship_z;
       }
@@ -84,14 +84,12 @@ namespace octet {
     }
 
     //Basic seek behaviours 
-    void seek(scene_node *ship_node, scene_node *target_ship){
+    void seek(scene_node *ship_node, scene_node *target_ship, vec3 facingVector){
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
 
-      vec3 facingVec = target_ship->get_position() - ship_node->get_position();
-
-      float angle = atan2(facingVec.x(), facingVec.z());
+      float angle = atan2(facingVector.x(), facingVector.z());
 
       float angle_diff = angle - current_angle;
       current_angle = angle;
@@ -103,12 +101,10 @@ namespace octet {
     //Basic flee behaviours, the opposite of seek
     void flee(scene_node *ship_node, scene_node *enemy_ship, vec3 facingVector){
       ship_node->activate();
-      //ship_node->set_damping(0.5f, 0.5f);
-      //ship_node->set_friction(1.0f);
+      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_friction(1.0f);
 
-      vec3 facingVec = ship_node->get_position() - enemy_ship->get_position();
-
-      float angle = atan2(facingVec.x(), facingVec.z());
+      float angle = atan2(facingVector.x(), facingVector.z());
 
       float angle_diff = angle - current_angle;
       current_angle = angle;

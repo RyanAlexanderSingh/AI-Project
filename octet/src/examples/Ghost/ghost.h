@@ -20,13 +20,13 @@ namespace octet {
     //scene node for the player
     ref<scene_node> player_node;
 
-    //arrays to store the seek enemies (objects)
-    dynarray<merc_ship*> seek_enemies;
+    //arrays to store the NPC's
+    dynarray<merc_ship*> merc_array;
+    dynarray<civilian_ship*> civilian_array;
     ref<boss_ship> boss_enemy;
 
     // scene for drawing box
     ref<visual_scene> app_scene;
-   
 
     //only using this for the skybox (think about moving this)
     collada_builder loader;
@@ -69,11 +69,18 @@ namespace octet {
 
       ai.init(); //essentially just creating the random seed
 
-      ////create the speed enemy ships
-      for (int i = 0; i < 5; ++i){
-        merc_ship *seek_enemy = new merc_ship();
-        seek_enemy->init(this, app_scene);
-        seek_enemies.push_back(seek_enemy);
+      //create the merc enemy ships
+      for (int i = 0; i < 3; ++i){
+        merc_ship *merc = new merc_ship();
+        merc->init(this, app_scene);
+        merc_array.push_back(merc);
+      }
+
+      //create the civilian ships
+      for (int i = 0; i < 4; ++i){
+        civilian_ship *civilian = new civilian_ship();
+        civilian->init(this, app_scene);
+        civilian_array.push_back(civilian);
       }
 
       //create the boss ship
@@ -97,8 +104,11 @@ namespace octet {
       //update our ships
       player.update();
       boss_enemy->update(player_node);
-      for (int i = 0; i < seek_enemies.size(); ++i){
-        seek_enemies[i]->update(player_node);
+      for (unsigned i = 0; i < merc_array.size(); ++i){
+        merc_array[i]->update(player_node);
+      }
+      for (unsigned i = 0; i < civilian_array.size(); ++i){
+        civilian_array[i]->update(player_node);
       }
 
       // update matrices. assume 30 fps.
@@ -107,9 +117,9 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
       
-      scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
        skybox->rotate(0.003f, vec3(1, 0, 0));
-       skybox->rotate(0.003f, vec3(0, 1, 0));
+       skybox->rotate(0.003f, vec3(0, 1, 0));*/
     }
   };
 }

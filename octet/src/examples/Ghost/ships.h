@@ -8,8 +8,6 @@
 #ifndef SHIPS_H_INCLUDED
 #define SHIPS_H_INCLUDED
 
-
-
 #include <random>
 
 namespace octet {
@@ -23,8 +21,7 @@ namespace octet {
     //shaders for the agro radius circles
     ref<color_shader> shader;
     GLuint vertices;
-    int test = 0.0f;
-   
+
   public:
     ships(){}
 
@@ -38,10 +35,9 @@ namespace octet {
       GLfloat vertex_data[722];
 
       for (int i = 0; i < 720; i += 3) {
-        vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
-        vertex_data[i + 1] = 0.0f;
-        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20);
-        printf("%i\n", i);
+        vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //x pos
+        vertex_data[i + 1] = 0.0f; // y pos (we don't need this)
+        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //z pos
       }
       //vertex_data[719] = 0.0f;
       //vertex_data[720] = 30.0f; //x position
@@ -50,6 +46,7 @@ namespace octet {
     }
 
     void update_agro_circle(){
+
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
@@ -61,14 +58,13 @@ namespace octet {
 
       // tell OpenGL what kind of vertices we have
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-      glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
       // draw a triangle
       glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
 
     //create a player node
     void create_player(){
-      if (!loader.load_xml("assets/SpaceShip.dae")) {
+      if (!loader.load_xml("assets/player_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
@@ -98,7 +94,7 @@ namespace octet {
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 
-    //create a random ship to be announced enemy
+    //create a civilian ship
     void create_random_ship(){
       if (!loader.load_xml("assets/boss_ship.dae")) {
         printf("failed to load file player ship!\n");
@@ -110,16 +106,16 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
 
-      float rand_x = float(rand() % 100);
-      float rand_z = float(rand() % 100);
+      float rand_x = float(rand() % 200 + -200);
+      float rand_z = float(rand() % 200 + -200);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
     }
 
-    //create a random seek enemy 
-    void create_seek_enemy(){
-      if (!loader.load_xml("assets/seek_ship.dae")) {
+    //create a merc enemy 
+    void create_merc_ship(){
+      if (!loader.load_xml("assets/merc_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
@@ -129,8 +125,9 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
       //get some random numbers for x and z pos
-      float rand_x = float(rand() % 100);
-      float rand_z = float(rand() % 100);
+      float rand_x = float(rand() % 200 + -200);
+      float rand_z = float(rand() % 200 + -200);
+      printf("Random number: %f\n", rand_x);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);

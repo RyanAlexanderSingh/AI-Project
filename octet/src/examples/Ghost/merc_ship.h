@@ -40,12 +40,11 @@ namespace octet {
 
     //create a random seek enemy 
     void init_seek_enemy(){
-      speed_ship.create_seek_enemy();
+      speed_ship.create_merc_ship();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
     void update(scene_node *target_ship){
-      
       ai.wander(ship_node); 
     }
 
