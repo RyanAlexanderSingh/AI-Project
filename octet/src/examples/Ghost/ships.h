@@ -64,7 +64,7 @@ namespace octet {
 
     //create a player node
     void create_player(){
-      if (!loader.load_xml("assets/player_ship.dae")) {
+      if (!loader.load_xml("assets/ships/player_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
@@ -79,7 +79,7 @@ namespace octet {
 
     //create a big boss enemy
     void create_boss_enemy(){
-      if (!loader.load_xml("assets/boss_ship.dae")) {
+      if (!loader.load_xml("assets/ships/boss_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
@@ -95,8 +95,8 @@ namespace octet {
     }
 
     //create a civilian ship
-    void create_random_ship(){
-      if (!loader.load_xml("assets/boss_ship.dae")) {
+    void create_civilian_ship(){
+      if (!loader.load_xml("assets/ships/civilian_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
@@ -115,7 +115,7 @@ namespace octet {
 
     //create a merc enemy 
     void create_merc_ship(){
-      if (!loader.load_xml("assets/merc_ship.dae")) {
+      if (!loader.load_xml("assets/ships/merc_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }

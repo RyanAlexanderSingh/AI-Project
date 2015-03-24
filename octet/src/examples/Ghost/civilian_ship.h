@@ -14,14 +14,10 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
-    ships boss;
+    ships civilian;
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
-
-    //shaders for the agro radius circles
-    ref<color_shader> boss_shader;
-    GLuint boss_vertices;
 
     const float agro_range = 25.0f;
 
@@ -32,12 +28,12 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      boss.init(the_app, app_scene);
+      civilian.init(the_app, app_scene);
       init_boss_enemy();
     }
 
     void init_boss_enemy(){
-      boss.create_boss_enemy();
+      civilian.create_random_ship();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
