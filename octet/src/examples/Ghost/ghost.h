@@ -85,7 +85,7 @@ namespace octet {
       enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
 
       //create the civilian ships
-      for (int i = 0; i < 20; ++i){
+      for (int i = 0; i < 10; ++i){
         civilian_ship *civilian = new civilian_ship();
         civilian->init(this, app_scene); //let the civilians know who the enemies are 
         civilians.push_back(civilian->return_ship_node());
@@ -109,7 +109,7 @@ namespace octet {
       player.update();
       //update the enemies
       //boss_enemy->update(player_node);
-      for (int i = 0; i < merc_array.size(); ++i){
+      for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
         merc_array[i]->update(civilians, player_node);
       }

@@ -8,6 +8,8 @@
 //
 #ifndef AI_BEHAVIOURS_H_INCLUDED
 #define AI_BEHAVIOURS_H_INCLUDED
+
+#define PI 3.14159265358979323846  /* pi */
 namespace octet {
 
   class ai_behaviours : public resource {
@@ -15,14 +17,12 @@ namespace octet {
     //handles player controls
     ship_controls inputs;
 
-    app *the_app;
-    visual_scene *app_scene;
-
     //variables for wandering
     float wandertheta = 0.0f;
 
     //for wandering
     float current_angle = 0.0f;
+
 
   public:
     ai_behaviours(){}
@@ -75,7 +75,6 @@ namespace octet {
       ship_node->set_friction(1.0f);
 
       vec3 facingVec = target - ship_node->get_position();
-
       float angle = atan2(facingVec.x(), facingVec.z());
       float angle_diff = angle - current_angle;
       current_angle = angle;
@@ -91,7 +90,6 @@ namespace octet {
       ship_node->set_friction(1.0f);
 
       float angle = atan2(facingVector.x(), facingVector.z());
-
       float angle_diff = angle - current_angle;
       current_angle = angle;
       
@@ -106,23 +104,21 @@ namespace octet {
       ship_node->set_friction(1.0f);
 
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
-      //oppositeVec = oppositeVec.normalize();
+
       float angle = atan2(oppositeVec.x(), oppositeVec.z());
 
-      btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
-      btQuaternion transrot = trans.getRotation();
-      float angle_diff = transrot.getAngle() - angle;
-      //current_angle = angle;
-      
+      float angle_diff = angle - current_angle;
+      current_angle = angle;
+
       inputs.rotate(ship_node, angle_diff);
-      inputs.accelerate(ship_node, 20.0f);
+      inputs.accelerate(ship_node, 10.0f);
     }
 
     //This will be the shooting function - currently just looking at the ship
     //there will be a chance the merc will attack a civilian (add this later)
     void shoot(scene_node *ship_node, vec3 facingVector){
       ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_damping(3.5f, 0.5f);
       ship_node->set_friction(1.0f);
 
       float angle = atan2(facingVector.x(), facingVector.z());

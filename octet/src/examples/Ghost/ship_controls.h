@@ -33,7 +33,7 @@ namespace octet {
     //called every frame to update the player physics
     void update(scene_node *player_node, scene_node *camera_node){
       player_node->set_damping(0.5f, 1.0f);
-      player_node->clamp_linear_velocity(10);
+      player_node->clamp_linear_velocity(100);
 
       float friction = 0.0f;
       if (the_app->is_key_down('A')) {
@@ -43,16 +43,16 @@ namespace octet {
         rotate(player_node, -angle_iteration);
       }
       if (the_app->is_key_down('W')) {
-        if (acceleration < 10.0f){
+        if (acceleration < 30.0f){
           acceleration += power;
         }
-        accelerate(player_node, 20);
+        accelerate(player_node, acceleration);
       }
       else if (the_app->is_key_down('S')) {
-        if (acceleration > -10.0f){
+        if (acceleration > -30.0f){
           acceleration -= power;
         }
-        accelerate(player_node, 20);
+        accelerate(player_node, acceleration);
       }
       else if (the_app->is_key_down('Q')) {
         if (acceleration > -10.0f){
@@ -98,9 +98,6 @@ namespace octet {
       if (the_app->is_key_down(key_esc)){
         exit(1);
       }
-      btTransform trans = player_node->get_rigid_body()->getCenterOfMassTransform();
-      btQuaternion transrot = trans.getRotation();
-      printf("Rotation: %f\n", transrot.getAngle());
     }
 
     void rotate(scene_node *ship_node, float angle){

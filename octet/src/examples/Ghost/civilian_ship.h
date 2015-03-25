@@ -22,7 +22,12 @@ namespace octet {
     ref<scene_node> ship_node;
     const float avoidance_range = 45.0f;
     const float speed = 5.0f;
+
+    vec3 heading = (0.0f, 0.0f, 1.0f);
     float current_angle = 0.0f;
+
+    enum civilianState {FLEEING, WANDERING};
+
 
   public:
     civilian_ship(){}
@@ -46,17 +51,27 @@ namespace octet {
 
     //civilian ships are scared of everything except the player
     void update(dynarray<scene_node*> enemies, scene_node *player){
-      for (int i = 0; i < enemies.size(); ++i){
-        vec3 facingVec = enemies[i]->get_position() - ship_node->get_position();
+      bool decisionTaken = false;
+      for (unsigned i = 0; i < enemies.size() && !decisionTaken; ++i){
+        vec3 distanceVec = enemies[i]->get_position() - ship_node->get_position();
         //check if its within the range to run away from them
-        if ((facingVec.x() > -avoidance_range && facingVec.x() < avoidance_range)
-          && (facingVec.z() > -avoidance_range && facingVec.z() < avoidance_range)){
+        if ((distanceVec.x() > -avoidance_range && distanceVec.x() < avoidance_range)
+          && (distanceVec.z() > -avoidance_range && distanceVec.z() < avoidance_range)){
           //we want to use this vector to flee the opposite way
           ai.flee(ship_node, enemies[i]);
+          decisionTaken = true;
         }
-        else{
-          //ai.wander(ship_node, speed);
-        }
+      }
+      vec3 distanceVec = player->get_position() - ship_node->get_position();
+      //check if its within the range to run away from them
+      if ((distanceVec.x() > -avoidance_range && distanceVec.x() < avoidance_range)
+        && (distanceVec.z() > -avoidance_range && distanceVec.z() < avoidance_range)){
+        //we want to use this vector to flee the opposite way
+        ai.flee(ship_node, player);
+        decisionTaken = true;
+      }
+      if(!decisionTaken){
+        ai.wander(ship_node, speed);
       }
     }
 

@@ -21,8 +21,8 @@ namespace octet {
 
     ref<scene_node> ship_node;
 
-    const float agro_range = 45.0f;
-    const float speed = 2.0f;
+    const float agro_range = 55.0f;
+    const float speed = 4.0f;
 
   public:
     merc_ship(){}
@@ -46,7 +46,7 @@ namespace octet {
     }
 
     void update(dynarray<scene_node*> civilians, scene_node *player_ship){
-      for (int i = 0; i < civilians.size(); ++i){
+      for (unsigned i = 0; i < civilians.size(); ++i){
         //probably not the best way, think about putting this in a struct
         vec3 enemy_position = civilians[i]->get_position();
         vec3 facingVec = enemy_position - ship_node->get_position();
