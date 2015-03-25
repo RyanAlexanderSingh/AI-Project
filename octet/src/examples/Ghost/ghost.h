@@ -108,7 +108,7 @@ namespace octet {
       //update our ships
       player.update();
       //update the enemies
-      //boss_enemy->update(player_node);
+      boss_enemy->update(player_node);
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
         merc_array[i]->update(civilians, player_node);

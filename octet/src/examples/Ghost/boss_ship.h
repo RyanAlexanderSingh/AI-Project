@@ -52,14 +52,8 @@ namespace octet {
       vec3 facingVec = enemy_position - ship_node->get_position();
       float diff_x = facingVec.x();
       float diff_z = facingVec.z();
-      //check if its within the range to run away from them
-      if ((diff_x > -agro_range && diff_x < agro_range) && (diff_z > -agro_range && diff_z < agro_range)){
-        //if the player is in range, flee from him 
-        ai.seek(ship_node, facingVec);
-      }
-      else{
-        ai.wander(ship_node);
-      }
+      ai.wander(ship_node);
+
     }
 
     ~boss_ship() {

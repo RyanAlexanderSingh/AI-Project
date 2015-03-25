@@ -62,6 +62,8 @@ namespace octet {
       glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
 
+
+
     //create a player node
     void create_player(){
       if (!loader.load_xml("assets/ships/player_ship.dae")) {
@@ -70,6 +72,10 @@ namespace octet {
       }
       resource_dict dict;
       loader.get_resources(dict);
+
+      // note that this call will dump the code below to log.txt
+      dict.dump_assets(log(""));
+
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/ships/playership_uv.jpg"));
       mat4t location;
@@ -78,15 +84,15 @@ namespace octet {
 
     //create a big boss enemy
     void create_boss_enemy(){
-      if (!loader.load_xml("assets/ships/boss_ship.dae")) {
+      if (!loader.load_xml("assets/ships/boss_ship1.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
       }
       resource_dict dict;
       loader.get_resources(dict);
 
-      mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/ships/mercship_uv.jpg"));
+      mesh *enemy_mesh = dict.get_mesh("StarShip-lib+blinn1");
+      material *mat = new material(new image("assets/ships/bossship_uv.jpg"));
       mat4t enemy_location;
       enemy_location.translate(vec3(0.0f, 0.0f, 0.0f));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
