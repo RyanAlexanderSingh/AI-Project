@@ -47,14 +47,11 @@ namespace octet {
     //civilian ships are scared of everything except the player
     void update(dynarray<scene_node*> enemies, scene_node *player){
       for (int i = 0; i < enemies.size(); ++i){
-        vec3 enemy_position = enemies[i]->get_position();
-        //we're only interested in the difference in the x and z axis
-        vec3 facingVec = enemy_position - ship_node->get_position();
+        vec3 facingVec = enemies[i]->get_position() - ship_node->get_position();
         //check if its within the range to run away from them
         if ((facingVec.x() > -avoidance_range && facingVec.x() < avoidance_range)
           && (facingVec.z() > -avoidance_range && facingVec.z() < avoidance_range)){
           //we want to use this vector to flee the opposite way
-          //vec3 oppositeVec = ship_node->get_position() - enemy_position;
           ai.flee(ship_node, enemies[i]);
         }
         else{

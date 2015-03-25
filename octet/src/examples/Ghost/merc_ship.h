@@ -49,7 +49,6 @@ namespace octet {
       for (int i = 0; i < civilians.size(); ++i){
         //probably not the best way, think about putting this in a struct
         vec3 enemy_position = civilians[i]->get_position();
-
         vec3 facingVec = enemy_position - ship_node->get_position();
         //check if its within the range to run away from them
         if ((facingVec.x() > -agro_range && facingVec.x() < agro_range)

@@ -106,11 +106,12 @@ namespace octet {
       ship_node->set_friction(1.0f);
 
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
+      //oppositeVec = oppositeVec.normalize();
       float angle = atan2(oppositeVec.x(), oppositeVec.z());
 
       btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
       btQuaternion transrot = trans.getRotation();
-      float angle_diff = angle - transrot.getAngle();
+      float angle_diff = transrot.getAngle() - angle;
       //current_angle = angle;
       
       inputs.rotate(ship_node, angle_diff);
