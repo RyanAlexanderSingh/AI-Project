@@ -23,11 +23,9 @@ namespace octet {
     const float avoidance_range = 45.0f;
     const float speed = 5.0f;
 
-    vec3 heading = (0.0f, 0.0f, 1.0f);
     float current_angle = 0.0f;
 
     enum civilianState {FLEEING, WANDERING};
-
 
   public:
     civilian_ship(){}
