@@ -46,6 +46,11 @@ namespace octet {
     }
 
     void update(dynarray<scene_node*> civilians, scene_node *player_ship){
+      //activate bullet physics
+      ship_node->activate();
+      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_friction(1.0f);
+
       for (unsigned i = 0; i < civilians.size(); ++i){
         //probably not the best way, think about putting this in a struct
         vec3 enemy_position = civilians[i]->get_position();
@@ -53,9 +58,10 @@ namespace octet {
         //check if its within the range to run away from them
         if ((facingVec.x() > -agro_range && facingVec.x() < agro_range)
           && (facingVec.z() > -agro_range && facingVec.z() < agro_range)){
-          ai.shoot(ship_node, facingVec);
+          ai.capture(ship_node, facingVec);
         }
         else{
+
           ai.wander(ship_node, speed);
         }
       }

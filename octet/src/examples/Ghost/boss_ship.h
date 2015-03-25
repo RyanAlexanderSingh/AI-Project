@@ -19,10 +19,6 @@ namespace octet {
 
     ref<scene_node> ship_node;
 
-    //shaders for the agro radius circles
-    ref<color_shader> boss_shader;
-    GLuint boss_vertices;
-
     const float agro_range = 40.0f;
 
   public:
@@ -46,6 +42,10 @@ namespace octet {
     }
 
     void update(scene_node *target_ship){
+      //activate bullet physics
+      ship_node->activate();
+      ship_node->set_damping(0.5f, 0.5f);
+      ship_node->set_friction(1.0f);
 
       vec3 enemy_position = target_ship->get_position();
       //we're only interested in the difference in the x and z axis

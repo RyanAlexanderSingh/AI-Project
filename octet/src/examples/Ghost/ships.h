@@ -71,7 +71,7 @@ namespace octet {
       resource_dict dict;
       loader.get_resources(dict);
       mesh *player_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/playerShip_test.jpg"));
+      material *mat = new material(new image("assets/ships/playership_uv.jpg"));
       mat4t location;
       app_scene->add_shape(location, player_mesh, mat, false);
     }
@@ -86,7 +86,7 @@ namespace octet {
       loader.get_resources(dict);
 
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
+      material *mat = new material(new image("assets/ships/mercship_uv.jpg"));
       mat4t enemy_location;
       enemy_location.translate(vec3(0.0f, 0.0f, 0.0f));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
@@ -102,7 +102,7 @@ namespace octet {
       loader.get_resources(dict);
 
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
+      material *mat = new material(new image("assets/ships/civilianship_uv.jpg"));
 
       float rand_x = float(rand() % 200 + -200);
       float rand_z = float(rand() % 200 + -200);
@@ -121,7 +121,7 @@ namespace octet {
       loader.get_resources(dict);
 
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
-      material *mat = new material(new image("assets/seekenemyship_uv.jpg"));
+      material *mat = new material(new image("assets/ships/mercship_uv.jpg"));
       //get some random numbers for x and z pos
       float rand_x = float(rand() % 200 + -200);
       float rand_z = float(rand() % 200 + -200);

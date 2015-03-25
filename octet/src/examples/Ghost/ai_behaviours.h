@@ -21,7 +21,7 @@ namespace octet {
     float wandertheta = 0.0f;
 
     //for wandering
-    float current_angle = 0.0f;
+    float currentShipAngle = 0.0f;
 
 
   public:
@@ -34,8 +34,16 @@ namespace octet {
       rand_num = rand_num / 100.0f;
 
       float r3 = -0.15f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.15f - -0.15f)));
-      //printf("random number: %f \n", r3);
       return r3;
+    }
+
+    //figure out the arctangent of a vector
+    //return the degrees to rotate object by
+    float angle_to_target(float x, float z){
+      float Angle = atan2(x, z);
+      float degreesToRotate = Angle - currentShipAngle;
+      currentShipAngle = Angle;
+      return degreesToRotate;
     }
 
     void init(){
@@ -43,7 +51,7 @@ namespace octet {
     }
 
     //Basic wandering behaviours
-    void wander(scene_node *ship_node, float speed=4.0f){
+    void wander(scene_node *ship_node, float speed = 4.0f){
       vec3 target = (0.0f, 0.0f, 0.0f);
       //basic "keep within the boundaries" wandering
       float ship_x = ship_node->get_position().x();
@@ -69,64 +77,42 @@ namespace octet {
         target = circleloc + circleOffSet; //our final target to aim for
       }
 
-      //activate bullet physics
-      ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
-      ship_node->set_friction(1.0f);
+      vec3 facingVector = target - ship_node->get_position();
+      float angle = angle_to_target(facingVector.x(), facingVector.z());
 
-      vec3 facingVec = target - ship_node->get_position();
-      float angle = atan2(facingVec.x(), facingVec.z());
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
-
-      inputs.rotate(ship_node, angle_diff);
+      inputs.rotate(ship_node, angle);
       inputs.accelerate(ship_node, speed);
     }
 
     //Basic seek behaviours 
     void seek(scene_node *ship_node, vec3 facingVector){
-      ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
-      ship_node->set_friction(1.0f);
 
-      float angle = atan2(facingVector.x(), facingVector.z());
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
-      
-      inputs.rotate(ship_node, angle_diff);
+      float angle = angle_to_target(facingVector.x(), facingVector.z());
+
+      inputs.rotate(ship_node, angle);
       inputs.accelerate(ship_node, 4.0f);
     }
 
     //Basic flee behaviours, the opposite of seek
     void flee(scene_node *ship_node, scene_node *enemy){
-      ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
-      ship_node->set_friction(1.0f);
 
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
+      float angle = angle_to_target(oppositeVec.x(), oppositeVec.z());
 
-      float angle = atan2(oppositeVec.x(), oppositeVec.z());
-
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
-
-      inputs.rotate(ship_node, angle_diff);
+      inputs.rotate(ship_node, angle);
       inputs.accelerate(ship_node, 10.0f);
     }
 
-    //This will be the shooting function - currently just looking at the ship
-    //there will be a chance the merc will attack a civilian (add this later)
-    void shoot(scene_node *ship_node, vec3 facingVector){
-      ship_node->activate();
-      ship_node->set_damping(3.5f, 0.5f);
-      ship_node->set_friction(1.0f);
+    //Capture function. The ships will chase and capture civilians
+    void capture(scene_node *ship_node, vec3 facingVector){
+      float angle = angle_to_target(facingVector.x(), facingVector.z());
+      inputs.rotate(ship_node, angle);
+      inputs.accelerate(ship_node, 20.0f);
+    }
 
-      float angle = atan2(facingVector.x(), facingVector.z());
-      float angle_diff = angle - current_angle;
-      current_angle = angle;
-
-      inputs.rotate(ship_node, angle_diff);
-      //inputs.accelerate(ship_node, 20.0f);
+    //flock to a target -- civilians will flock to the player ship
+    void flock(scene_node *ship_node, scene_node *flock_target){
+        
     }
 
     ~ai_behaviours() {
