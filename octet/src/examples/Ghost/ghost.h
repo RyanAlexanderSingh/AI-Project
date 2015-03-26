@@ -71,6 +71,9 @@ namespace octet {
 
       ai.init(); //essentially just creating the random seed
 
+      //skybox
+      //create_skybox();
+
       //create the merc enemy ships
       for (int i = 0; i < 5; ++i){
         merc_ship *merc = new merc_ship();
@@ -79,6 +82,7 @@ namespace octet {
         enemies.push_back(merc->return_ship_node());  //lets add the enemies to the array so we can check all enemies
       }
 
+      
       //create the boss ship
       boss_enemy = new boss_ship();
       boss_enemy->init(this, app_scene);
@@ -91,12 +95,11 @@ namespace octet {
         civilians.push_back(civilian->return_ship_node());
         civilian_array.push_back(civilian);        
       }
+
       //create the player ship
       player.init(this, app_scene);
       player_node = player.return_player_node();
 
-      //skybox
-      //create_skybox();
     }
 
     /// this is called to draw the world
@@ -108,6 +111,7 @@ namespace octet {
       //update our ships
       player.update();
       //update the enemies
+
       boss_enemy->update(civilians, enemies, player_node, player.get_orientation());
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes

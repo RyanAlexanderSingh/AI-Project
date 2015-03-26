@@ -18,7 +18,7 @@ namespace octet {
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
-    const float sq_agro_range = 45.0f*45.0f;
+    const float sq_flee_range = 30.0f*30.0f;
     const float sq_flocking_range = 30.0f*30.0f;
     const float speed = 5.0f;
 
@@ -46,7 +46,7 @@ namespace octet {
     void update(dynarray<scene_node*> enemies, scene_node *player, float player_orientation){
 
       state = WANDERING; //set the default state
-      vec3 colour = (0.0f, 0.0f, 0.0f); //colour for the radius
+      float lineWidth = 1.0f; //default size of glLines
       //activate bullet physics
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
@@ -66,7 +66,7 @@ namespace octet {
       for (unsigned i = 0; i < enemies.size() && state != FLEEING; ++i){
         vec3 distanceVec = enemies[i]->get_position() - ship_node->get_position();
         //check if its within the range to run away from them
-        if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
+        if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_flee_range)){
           //we want to use this vector to flee the opposite way
           ai.flee(ship_node, enemies[i]);
           state = FLEEING; //lets set it to fleeing
@@ -78,14 +78,16 @@ namespace octet {
       }
       switch (state){
       case WANDERING:
-        colour.y() = 1.0f; //set the colour green
+        lineWidth = 1.0f;
         break;
       case FLEEING:
+        lineWidth = 2.0f;
         break;
       case FLOCKING:
+        lineWidth = 2.0f;
         break;
       }
-      civilianSpaceShip.update_radius(ship_node, player, player_orientation, colour);
+      civilianSpaceShip.update_radius(ship_node, player, player_orientation, lineWidth);
     }
 
     ~civilian_ship() {

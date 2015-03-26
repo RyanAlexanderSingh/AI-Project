@@ -8,6 +8,8 @@
 #ifndef SHIPS_H_INCLUDED
 #define SHIPS_H_INCLUDED
 
+#define PI 3.14159265358979323846f  /* pi */
+
 #include <random>
 
 namespace octet {
@@ -21,16 +23,23 @@ namespace octet {
     GLfloat vertex_data[722];
     GLuint vertices;
 
+    color_shader shader;
+
 
   public:
     ships(){}
 
     void init(app *app, visual_scene *vs){
       this->the_app = app;
+      this->app_scene = vs;
+
+      shader.init();
+      
+      //create basic default circle to work with
       for (int i = 0; i < 720; i += 3) {
-        vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //x pos
+        vertex_data[i] = (cos((PI * (i / 2) / 180.0f)) * 1); //x pos
         vertex_data[i + 1] = 0.0f; // y pos (we don't need this)
-        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //z pos
+        vertex_data[i + 2] = (sin((PI * (i / 2) / 180.0f)) * 1); //z pos
       }
 
     }
@@ -43,17 +52,18 @@ namespace octet {
       vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
       mat4t rotation;
       rotation.loadIdentity();
-      rotation.rotateY(angle * 180.0f / 3.14f);
+      rotation.rotateY(angle * (180.0f / PI));
       distanceVec = rotation.rmul(distanceVec);
 
       GLfloat relative_vertex_data[722];
       for (int i = 0; i < 720; i += 3){
-        relative_vertex_data[i] = vertex_data[i] + distanceVec.x();
+        relative_vertex_data[i] = (vertex_data[i] * 20.0f) + distanceVec.x();
         relative_vertex_data[i + 1] = vertex_data[i + 1] + distanceVec.y(); // y pos (we don't need this)
-        relative_vertex_data[i + 2] = vertex_data[i + 2] + distanceVec.z(); //z pos
+        relative_vertex_data[i + 2] = (vertex_data[i + 2] * 20.0f) + distanceVec.z(); //z pos
       }
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(relative_vertex_data), relative_vertex_data, GL_STATIC_DRAW);
+
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
@@ -66,12 +76,12 @@ namespace octet {
       // tell OpenGL what kind of vertices we have
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
       // draw a triangle
+      glLineWidth(1.0f);
+      glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
       glDrawArrays(GL_LINE_LOOP, 0, 239);
-
-
     }
-
-    void update_radius(scene_node *ship, scene_node *player_ship, float angle, vec3 colour){
+    
+    void update_radius(scene_node *ship, scene_node *player_ship, float angle, float lineWidth){
 
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
@@ -79,18 +89,19 @@ namespace octet {
       vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
       mat4t rotation;
       rotation.loadIdentity();
-      rotation.rotateY(angle * 180.0f / 3.14f);
+      rotation.rotateY(angle * (180.0f / PI));
       distanceVec = rotation.rmul(distanceVec);
 
       GLfloat relativeVertexData[722];
       for (int i = 0; i < 720; i += 3){
-        relativeVertexData[i] = vertex_data[i] + distanceVec.x();
-        relativeVertexData[i + 1] = vertex_data[i + 1] + distanceVec.y(); // y pos (we don't need this)
-        relativeVertexData[i + 2] = vertex_data[i + 2] + distanceVec.z(); //z pos
+        relativeVertexData[i] = (vertex_data[i] * 30.0f) + distanceVec.x();
+        relativeVertexData[i + 1] = vertex_data[i + 1] + distanceVec.y();  // y pos (we don't need this)
+        relativeVertexData[i + 2] = (vertex_data[i + 2] * 30.0f) + distanceVec.z(); //z pos
       }
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(relativeVertexData), relativeVertexData, GL_STATIC_DRAW);
-      /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
+      
+      // allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
@@ -101,7 +112,9 @@ namespace octet {
 
       // tell OpenGL what kind of vertices we have
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-      // draw a triangle
+      glLineWidth(lineWidth);
+      // draw a circle
+      glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
       glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
 
