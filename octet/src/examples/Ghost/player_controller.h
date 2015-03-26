@@ -12,7 +12,7 @@ namespace octet {
 
   class player_controller : public resource {
 
-    ships the_player;
+    ships playerSpaceShip;
 
     app *the_app;
     visual_scene *app_scene;
@@ -35,7 +35,7 @@ namespace octet {
       return player_node;
     }
 
-    //get the players orientation -> used for the drawing things
+    //get the players orientation -> used for the drawing OpenGL things
     float get_orientation(){
       return ship_orientation;
     }
@@ -44,22 +44,15 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      the_player.init(the_app, app_scene);
+      playerSpaceShip.init(the_app, app_scene);
       //create the player mesh and scene node
-      init_player_ship();
-
+      player_node = playerSpaceShip.create_player();
       the_camera = app_scene->get_camera_instance(0)->get_node();
-    }
-
-    //create player ship and return scene_node
-    void init_player_ship(){
-      player_node = the_player.create_player();
     }
 
     void update(){
 
       update_camera();
-
       player_node->set_damping(0.5f, 1.0f);
       player_node->clamp_linear_velocity(30);
 
@@ -108,12 +101,13 @@ namespace octet {
       }
     }
 
+    //update the camera
     void update_camera(){
 
       player_node->add_child(the_camera);
       the_camera->loadIdentity();
 
-      //change the camera type
+      //change the camera type (behind ship or above ship)
       if (the_app->is_key_going_down('P')){
         alternate_camera = !alternate_camera;
       }
@@ -124,7 +118,7 @@ namespace octet {
         the_camera->access_nodeToParent().rotateY(180);
         the_camera->access_nodeToParent().rotateX(-20);
       }
-      //above camera
+      //above ship
       else{
         the_camera->translate(vec3(0.0f, 300.0f, 0.0f));
         the_camera->access_nodeToParent().rotateY(180.0f);

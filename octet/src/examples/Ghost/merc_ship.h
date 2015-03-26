@@ -16,7 +16,7 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
-    ships mercenary_ship;
+    ships mercenarySpaceShip;
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
@@ -40,19 +40,13 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      mercenary_ship.init(the_app, app_scene);
-      init_seek_enemy();
+      mercenarySpaceShip.init(the_app, app_scene);
+      ship_node = mercenarySpaceShip.create_merc_ship();
       state = WANDERING; //lets set a default for the mercs
     }
 
-    //create a random seek enemy 
-    void init_seek_enemy(){
-      mercenary_ship.create_merc_ship();
-      ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
-    }
-
     void update(dynarray<scene_node*> civilians, scene_node *player_ship, float angle = 0){
-      mercenary_ship.update_agro_circle(ship_node, player_ship, angle);
+      mercenarySpaceShip.update_agro_circle(ship_node, player_ship, angle);
       state = WANDERING;
       //activate bullet physics
       ship_node->activate();

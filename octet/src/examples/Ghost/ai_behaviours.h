@@ -9,7 +9,7 @@
 #ifndef AI_BEHAVIOURS_H_INCLUDED
 #define AI_BEHAVIOURS_H_INCLUDED
 
-#define PI 3.14159265358979323846  /* pi */
+#define PI 3.14159265358979323846f  /* pi */
 namespace octet {
 
   class ai_behaviours : public resource {

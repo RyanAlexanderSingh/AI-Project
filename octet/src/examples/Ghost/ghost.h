@@ -85,7 +85,7 @@ namespace octet {
       enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
 
       //create the civilian ships
-      for (int i = 0; i < 1; ++i){
+      for (int i = 0; i < 10; ++i){
         civilian_ship *civilian = new civilian_ship();
         civilian->init(this, app_scene); //let the civilians know who the enemies are 
         civilians.push_back(civilian->return_ship_node());
@@ -108,14 +108,14 @@ namespace octet {
       //update our ships
       player.update();
       //update the enemies
-      boss_enemy->update(player_node);
+      boss_enemy->update(civilians, enemies, player_node, player.get_orientation());
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
         merc_array[i]->update(civilians, player_node, player.get_orientation());
       }
       //update the civilians
       for (unsigned i = 0; i < civilian_array.size(); ++i){
-        civilian_array[i]->update(enemies, player_node);
+        civilian_array[i]->update(enemies, player_node, player.get_orientation());
       }
 
       // update matrices. assume 30 fps.

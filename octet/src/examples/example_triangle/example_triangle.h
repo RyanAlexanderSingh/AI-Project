@@ -23,19 +23,16 @@ namespace octet {
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       GLfloat vertex_data[722];
-
+      glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
       vertex_data[0] = 0.0f;
       vertex_data[1] = 0.0f;
-      vertex_data[1] = 0.0f;
-      for (int i = 0; i < 720; i += 3) {
+      for (int i = 0; i < 720; i += 2) {
         vertex_data[i + 1] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 2);
-        vertex_data[i + 2] = 0.0f;
-        vertex_data[i + 3] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 2);
+        vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 2);
       }
       // 2 vertices to close the circle so it looks perfect
       vertex_data[719] = 0.0f;
       vertex_data[720] = 0.0f;
-      vertex_data[721] = 2.0f;
 
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
@@ -50,7 +47,7 @@ namespace octet {
       get_viewport_size(vx, vy);
 
       /// set a viewport - includes whole window area
-      glViewport(0, 0, vx, vy);
+      //glViewport(0, 0, vx, vy);
 
       /// clear the background and the depth buffer
       glClearColor(0, 1, 1, 1);
@@ -66,10 +63,10 @@ namespace octet {
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8, NULL);
-      glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+      glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 12, NULL);
+      glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
       // draw a triangle
-      glDrawArrays(GL_POINTS, 0, 361);
+      glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
   };
 }
