@@ -107,7 +107,7 @@ namespace octet {
     void capture(scene_node *ship_node, vec3 facingVector){
       float angle = angle_to_target(facingVector.x(), facingVector.z());
       inputs.rotate(ship_node, angle);
-      inputs.accelerate(ship_node, 20.0f);
+      inputs.accelerate(ship_node, 2.0f);
     }
 
     //flock to a target -- civilians will flock to the player ship

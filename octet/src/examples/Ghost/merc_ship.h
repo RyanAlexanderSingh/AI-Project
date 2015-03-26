@@ -22,7 +22,7 @@ namespace octet {
     ref<scene_node> ship_node;
 
     const float agro_range = 55.0f;
-    const float speed = 4.0f;
+    const float speed = 2.0f;
 
   public:
     merc_ship(){}
