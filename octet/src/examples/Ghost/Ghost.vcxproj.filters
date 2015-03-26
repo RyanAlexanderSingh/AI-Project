@@ -428,13 +428,12 @@
       <Filter>containers</Filter>
     </ClInclude>
     <ClInclude Include="ghost.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="ship_controls.h" />
     <ClInclude Include="ships.h" />
     <ClInclude Include="ai_behaviours.h" />
     <ClInclude Include="civilian_ship.h" />
     <ClInclude Include="boss_ship.h" />
     <ClInclude Include="merc_ship.h" />
+    <ClInclude Include="player_controller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

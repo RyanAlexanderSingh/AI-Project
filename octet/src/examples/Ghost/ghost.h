@@ -16,7 +16,7 @@ namespace octet {
     ai_behaviours ai;
 
     //create default player
-    player player;
+    player_controller player;
     //scene node for the player
     ref<scene_node> player_node;
 
@@ -72,7 +72,7 @@ namespace octet {
       ai.init(); //essentially just creating the random seed
 
       //create the merc enemy ships
-      for (int i = 0; i < 3; ++i){
+      for (int i = 0; i < 5; ++i){
         merc_ship *merc = new merc_ship();
         merc->init(this, app_scene);
         merc_array.push_back(merc);
@@ -85,7 +85,7 @@ namespace octet {
       enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
 
       //create the civilian ships
-      for (int i = 0; i < 10; ++i){
+      for (int i = 0; i < 1; ++i){
         civilian_ship *civilian = new civilian_ship();
         civilian->init(this, app_scene); //let the civilians know who the enemies are 
         civilians.push_back(civilian->return_ship_node());
@@ -111,7 +111,7 @@ namespace octet {
       boss_enemy->update(player_node);
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
-        merc_array[i]->update(civilians, player_node);
+        merc_array[i]->update(civilians, player_node, player.get_orientation());
       }
       //update the civilians
       for (unsigned i = 0; i < civilian_array.size(); ++i){

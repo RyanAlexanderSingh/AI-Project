@@ -18,8 +18,9 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
+    GLfloat vertex_data[722];
     //shaders for the agro radius circles
-    ref<color_shader> shader;
+    color_shader circle_shader;
     GLuint vertices;
 
   public:
@@ -29,24 +30,50 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      glGenBuffers(1, &vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      GLfloat vertex_data[722];
+      circle_shader.init();
 
       for (int i = 0; i < 720; i += 3) {
         vertex_data[i] = (cos((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //x pos
         vertex_data[i + 1] = 0.0f; // y pos (we don't need this)
         vertex_data[i + 2] = (sin((3.14159265358979323846f * (i / 2) / 180.0f)) * 20); //z pos
       }
-      //vertex_data[719] = 0.0f;
-      //vertex_data[720] = 30.0f; //x position
 
-      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
     }
 
-    void update_agro_circle(){
+    void update_agro_circle(scene_node *ship, scene_node *player_ship, float angle){
+      
+      glGenBuffers(1, &vertices);
+      glBindBuffer(GL_ARRAY_BUFFER, vertices);
+      
+      vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
+      mat4t rotation;
+      rotation.loadIdentity();
+      rotation.rotateY(angle * 180.0f / 3.14f);
+      distanceVec = rotation.rmul(distanceVec);
+      
+      GLfloat vertex_data_2[722];
+      for (int i = 0; i < 720; i += 3){
+        vertex_data_2[i] = vertex_data[i] + distanceVec.x();
+        vertex_data_2[i + 1] = vertex_data[i + 1] + distanceVec.y(); // y pos (we don't need this)
+        vertex_data_2[i + 2] = vertex_data[i + 2] + distanceVec.z(); //z pos
+      }
 
+      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data_2, GL_STATIC_DRAW);
+      /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
+      glEnable(GL_DEPTH_TEST);
+
+      // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
+      glEnableVertexAttribArray(0);
+
+      // use the buffer we made earlier.
+      glBindBuffer(GL_ARRAY_BUFFER, vertices);
+
+      // tell OpenGL what kind of vertices we have
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+      // draw a triangle
+      glDrawArrays(GL_LINE_LOOP, 0, 239);
+
+      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
@@ -63,9 +90,8 @@ namespace octet {
     }
 
 
-
     //create a player node
-    void create_player(){
+    scene_node *create_player(){
       if (!loader.load_xml("assets/ships/player_ship.dae")) {
         printf("failed to load file player ship!\n");
         exit(1);
@@ -80,6 +106,8 @@ namespace octet {
       material *mat = new material(new image("assets/ships/playership_uv.jpg"));
       mat4t location;
       app_scene->add_shape(location, player_mesh, mat, false);
+
+      return app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
     //create a big boss enemy

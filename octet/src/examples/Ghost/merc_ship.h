@@ -16,13 +16,18 @@ namespace octet {
     app *the_app;
     visual_scene *app_scene;
 
-    ships speed_ship;
+    ships mercenary_ship;
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
 
-    const float agro_range = 55.0f;
+    const float agro_range = 50.0f;
+    const float flee_range = 30.0f;
     const float speed = 2.0f;
+
+    //the different states of the mercs
+    enum mercState {TARGETING, FLEEING, WANDERING};
+    mercState state;
 
   public:
     merc_ship(){}
@@ -35,34 +40,38 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      speed_ship.init(the_app, app_scene);
+      mercenary_ship.init(the_app, app_scene);
       init_seek_enemy();
+      state = WANDERING; //lets set a default for the mercs
     }
 
     //create a random seek enemy 
     void init_seek_enemy(){
-      speed_ship.create_merc_ship();
+      mercenary_ship.create_merc_ship();
       ship_node = app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
     }
 
-    void update(dynarray<scene_node*> civilians, scene_node *player_ship){
+    void update(dynarray<scene_node*> civilians, scene_node *player_ship, float angle = 0){
+      mercenary_ship.update_agro_circle(ship_node, player_ship, angle);
+      state = WANDERING;
       //activate bullet physics
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
 
-      for (unsigned i = 0; i < civilians.size(); ++i){
+      for (unsigned i = 0; i < civilians.size() && state != TARGETING; ++i){
         //probably not the best way, think about putting this in a struct
-        vec3 enemy_position = civilians[i]->get_position();
-        vec3 facingVec = enemy_position - ship_node->get_position();
+        vec3 civilian_position = civilians[i]->get_position();
+        vec3 distanceVec = civilian_position - ship_node->get_position();
         //check if its within the range to run away from them
-        if ((facingVec.x() > -agro_range && facingVec.x() < agro_range)
-          && (facingVec.z() > -agro_range && facingVec.z() < agro_range)){
-          ai.capture(ship_node, facingVec);
+        if ((distanceVec.x() > -agro_range && distanceVec.x() < agro_range)
+          && (distanceVec.z() > -agro_range && distanceVec.z() < agro_range)){
+          ai.seek(ship_node, civilians[i]);
+          state = TARGETING;
         }
-        else{
-
-          ai.wander(ship_node, speed);
+        //default behaviour, lets just let it wandering around
+        if (state == WANDERING){
+          //ai.wander(ship_node, speed);
         }
       }
     }

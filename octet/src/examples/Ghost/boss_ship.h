@@ -18,8 +18,13 @@ namespace octet {
     ai_behaviours ai;
 
     ref<scene_node> ship_node;
+    
+    enum bossState{WANDERING, SEEKING, CAPTURE};
 
+    //consider changing the boss ships agro range
     const float agro_range = 40.0f;
+    const float capture_range = 5.0f;
+
 
   public:
     boss_ship(){}

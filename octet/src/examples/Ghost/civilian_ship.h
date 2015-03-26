@@ -17,14 +17,13 @@ namespace octet {
     ships civilian;
     ai_behaviours ai;
 
-    ship_controls inputs;
 
     ref<scene_node> ship_node;
-    const float avoidance_range = 45.0f;
-    const float flocking_range = 30.0f;
+    const float sq_agro_range = 45.0f*45.0f;
+    const float sq_flocking_range = 30.0f*30.0f;
     const float speed = 5.0f;
 
-    enum civilianState { FLEEING, WANDERING, FLOCKING }; //the different states the civilians can be in
+    enum civilianState { FLEEING, WANDERING, FLOCK, FOLLOWING }; //the different states the civilians can be in
     civilianState state; //create a new state
 
   public:
@@ -55,25 +54,26 @@ namespace octet {
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
       ship_node->set_friction(1.0f);
+
+      //check the player - we want to follow him
+      vec3 distanceVec = player->get_position() - ship_node->get_position();
+      //check if its within the range to flock towards the player
+      if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_flocking_range)
+        && state != FLOCK){
+        //we want to use this vector to flee the opposite way
+        ai.flock(ship_node, player);
+        state = FLOCK; //lets set it to fleeing
+      }
+
       //check the enemies, we want to evade them
       for (unsigned i = 0; i < enemies.size() && state != FLEEING; ++i){
         vec3 distanceVec = enemies[i]->get_position() - ship_node->get_position();
         //check if its within the range to run away from them
-        if ((distanceVec.x() > -avoidance_range && distanceVec.x() < avoidance_range)
-          && (distanceVec.z() > -avoidance_range && distanceVec.z() < avoidance_range)){
+        if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
           //we want to use this vector to flee the opposite way
           ai.flee(ship_node, enemies[i]);
           state = FLEEING; //lets set it to fleeing
         }
-      }
-      //check the player - we want to follow him
-      vec3 distanceVec = player->get_position() - ship_node->get_position();
-      //check if its within the range to flock towards the player
-      if ((distanceVec.x() > -avoidance_range && distanceVec.x() < avoidance_range)
-        && (distanceVec.z() > -avoidance_range && distanceVec.z() < avoidance_range)){
-        //we want to use this vector to flee the opposite way
-        ai.flock(ship_node, player);
-        state = FLOCKING; //lets set it to fleeing
       }
       //default behaviour, lets just let it wandering around
       if (state == WANDERING){

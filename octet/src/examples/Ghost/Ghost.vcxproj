@@ -222,8 +222,7 @@
     <ClInclude Include="civilian_ship.h" />
     <ClInclude Include="ghost.h" />
     <ClInclude Include="ships.h" />
-    <ClInclude Include="ship_controls.h" />
-    <ClInclude Include="player.h" />
+    <ClInclude Include="player_controller.h" />
     <ClInclude Include="merc_ship.h" />
   </ItemGroup>
   <ItemGroup>

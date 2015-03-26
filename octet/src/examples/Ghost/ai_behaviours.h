@@ -14,15 +14,11 @@ namespace octet {
 
   class ai_behaviours : public resource {
 
-    //handles player controls
-    ship_controls inputs;
-
     //variables for wandering
     float wandertheta = 0.0f;
 
     //for wandering
     float currentShipAngle = 0.0f;
-
 
   public:
     ai_behaviours(){}
@@ -31,7 +27,7 @@ namespace octet {
     float random_float() {
       float rand_num = 0;
       rand_num = rand() % 10 - 5; //gives me a number between -10 and 10;
-      rand_num = rand_num / 100.0f;
+      rand_num = rand_num / 100;
 
       float r3 = -0.15f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.15f - -0.15f)));
       return r3;
@@ -80,17 +76,18 @@ namespace octet {
       vec3 facingVector = target - ship_node->get_position();
       float angle = angle_to_target(facingVector.x(), facingVector.z());
 
-      inputs.rotate(ship_node, angle);
-      inputs.accelerate(ship_node, speed);
+      rotate(ship_node, angle);
+      accelerate(ship_node, speed);
     }
 
     //Basic seek behaviours 
-    void seek(scene_node *ship_node, vec3 facingVector){
-
-      float angle = angle_to_target(facingVector.x(), facingVector.z());
-
-      inputs.rotate(ship_node, angle);
-      inputs.accelerate(ship_node, 4.0f);
+    void seek(scene_node *ship_node, scene_node *target_ship){
+      //get the distance vector to the target
+      vec3 distanceVector = target_ship->get_position() - ship_node->get_position();
+      //rotate to angle
+      float angle = angle_to_target(distanceVector.x(), distanceVector.z());
+      rotate(ship_node, angle);
+      accelerate(ship_node, 4.0f);
     }
 
     //Basic flee behaviours, the opposite of seek
@@ -99,20 +96,40 @@ namespace octet {
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
       float angle = angle_to_target(oppositeVec.x(), oppositeVec.z());
 
-      inputs.rotate(ship_node, angle);
-      inputs.accelerate(ship_node, 10.0f);
+      rotate(ship_node, angle);
+      accelerate(ship_node, 10.0f);
     }
 
     //Capture function. The ships will chase and capture civilians
-    void capture(scene_node *ship_node, vec3 facingVector){
-      float angle = angle_to_target(facingVector.x(), facingVector.z());
-      inputs.rotate(ship_node, angle);
-      inputs.accelerate(ship_node, 2.0f);
+    void capture(scene_node *ship_node, vec3 distanceVector){
+      float angle = angle_to_target(distanceVector.x(), distanceVector.z());
+      rotate(ship_node, angle);
+      //inputs.accelerate(ship_node, 2.0f);
     }
 
     //flock to a target -- civilians will flock to the player ship
     void flock(scene_node *ship_node, scene_node *flock_target){
         
+      vec3 distanceVector = flock_target->get_position() - ship_node->get_position();
+      float angle = angle_to_target(distanceVector.x(), distanceVector.z());
+      rotate(ship_node, angle);
+    }
+
+    void rotate(scene_node *ship_node, float angle){
+      ship_node->activate();
+      btTransform trans = ship_node->get_rigid_body()->getCenterOfMassTransform();
+      btQuaternion transrot = trans.getRotation();
+      //create a new quaternion with an angle on y
+      btQuaternion rotquat(btVector3(0, 1, 0), angle);
+      transrot = transrot * rotquat;
+      trans.setRotation(transrot);
+      ship_node->get_rigid_body()->setCenterOfMassTransform(trans);
+    }
+
+    //used to control the player but could also be used to control the AI ship movements
+    void accelerate(scene_node *ship_node, float accel){
+      ship_node->activate();
+      ship_node->apply_central_force(ship_node->get_z() * (accel));
     }
 
     ~ai_behaviours() {

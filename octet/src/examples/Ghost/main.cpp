@@ -13,9 +13,8 @@
 #include "../../octet.h"
 
 #include "ships.h"
-#include "ship_controls.h"
 #include "ai_behaviours.h"
-#include "player.h"
+#include "player_controller.h"
 #include "civilian_ship.h"
 #include "boss_ship.h"
 #include "merc_ship.h"
