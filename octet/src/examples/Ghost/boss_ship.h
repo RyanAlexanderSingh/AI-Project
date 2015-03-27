@@ -57,7 +57,7 @@ namespace octet {
       float diff_x = facingVec.x();
       float diff_z = facingVec.z();
       ai.wander(ship_node);
-
+      bossSpaceShip.statusCircle(1.0f, 45.0f, ship_node, player_ship, player_orientation);
     }
 
     ~boss_ship() {

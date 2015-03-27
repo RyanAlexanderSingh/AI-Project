@@ -21,10 +21,9 @@ namespace octet {
     //camera instance
     ref<scene_node> the_camera;
 
-    float acceleration = 0.0f;
     float ship_orientation = 0.0f;
+    const float acceleration = 10.0f;
     const float angle_iteration = 0.03f;
-    const float power = 2.0f;
     bool alternate_camera = true;
 
   public:
@@ -53,7 +52,7 @@ namespace octet {
     void update(){
 
       update_camera();
-      player_node->set_damping(0.5f, 1.0f);
+      player_node->set_damping(0.5f, 0.0f);
       player_node->clamp_linear_velocity(30);
 
       float friction = 0.0f;
@@ -64,28 +63,16 @@ namespace octet {
         rotate_player(player_node, -angle_iteration);
       }
       if (the_app->is_key_down('W')) {
-        if (acceleration < 30.0f){
-          acceleration += power;
-        }
         player_node->apply_central_force(player_node->get_z() * (acceleration));
       }
       else if (the_app->is_key_down('S')) {
-        if (acceleration > -30.0f){
-          acceleration -= power;
-        }
         player_node->apply_central_force(player_node->get_z() * (acceleration));
       }
       else if (the_app->is_key_down('Q')) {
-        if (acceleration > -10.0f){
-          acceleration -= power;
-        }
         player_node->activate();
         player_node->apply_central_force(player_node->get_x() * (-acceleration));
       }
       else if (the_app->is_key_down('E')) {
-        if (acceleration > -10.0f){
-          acceleration -= power;
-        }
         player_node->activate();
         player_node->apply_central_force(player_node->get_x() * (acceleration));
       }
@@ -99,6 +86,8 @@ namespace octet {
       if (the_app->is_key_down(key_esc)){
         exit(1);
       }
+
+      playerSpaceShip.statusCircle(1.0f, 10.0f);
     }
 
     //update the camera
@@ -133,8 +122,8 @@ namespace octet {
       //create a new quaternion with an angle on y
       btQuaternion rotquat(btVector3(0, 1, 0), angle);
       ship_orientation = (ship_orientation + angle);
-      if (ship_orientation > 3.14159265f) ship_orientation -= 2 * 3.14159265f;
-      if (ship_orientation < 0) ship_orientation += 2 * 3.14159265f;
+      if (ship_orientation > PI) ship_orientation -= 2 * PI;
+      if (ship_orientation < 0) ship_orientation += 2 * PI;
       transrot = transrot * rotquat;
       trans.setRotation(transrot);
       ship_node->get_rigid_body()->setCenterOfMassTransform(trans);

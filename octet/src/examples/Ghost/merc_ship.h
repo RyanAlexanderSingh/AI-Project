@@ -21,8 +21,8 @@ namespace octet {
 
     ref<scene_node> ship_node;
 
-    const float agro_range = 50.0f;
-    const float flee_range = 30.0f;
+    const float sq_agro_range = 35.0*35.0f;
+    const float sq_flee_range = 35.0*35.0f;
     const float speed = 2.0f;
 
     //the different states of the mercs
@@ -46,7 +46,7 @@ namespace octet {
     }
 
     void update(dynarray<scene_node*> civilians, scene_node *player_ship, float angle = 0){
-      mercenarySpaceShip.update_agro_circle(ship_node, player_ship, angle);
+      mercenarySpaceShip.statusCircle(2.0f, 20.0f, ship_node, player_ship, angle);
       state = WANDERING;
       //activate bullet physics
       ship_node->activate();
@@ -58,8 +58,7 @@ namespace octet {
         vec3 civilian_position = civilians[i]->get_position();
         vec3 distanceVec = civilian_position - ship_node->get_position();
         //check if its within the range to run away from them
-        if ((distanceVec.x() > -agro_range && distanceVec.x() < agro_range)
-          && (distanceVec.z() > -agro_range && distanceVec.z() < agro_range)){
+        if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
           ai.seek(ship_node, civilians[i]);
           state = TARGETING;
         }

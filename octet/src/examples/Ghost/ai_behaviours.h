@@ -79,7 +79,7 @@ namespace octet {
       accelerate(ship_node, speed);
     }
 
-    //Basic seek behaviours 
+    //Basic seek behaviours (change to arrive)
     void seek(scene_node *ship_node, scene_node *target_ship){
       //get the distance vector to the target
       vec3 distanceVector = target_ship->get_position() - ship_node->get_position();
@@ -94,24 +94,30 @@ namespace octet {
 
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
       float angle = angle_to_target(oppositeVec.x(), oppositeVec.z());
-
       rotate(ship_node, angle);
       accelerate(ship_node, 10.0f);
     }
 
     //Capture function. The ships will chase and capture civilians
-    void capture(scene_node *ship_node, vec3 distanceVector){
+    void capture(scene_node *ship_node, scene_node *target_node){
+
+      vec3 distanceVector = target_node->get_position() - ship_node->get_position();
       float angle = angle_to_target(distanceVector.x(), distanceVector.z());
       rotate(ship_node, angle);
-      //inputs.accelerate(ship_node, 2.0f);
+      accelerate(ship_node, 3.0f);
     }
 
-    //flock to a target -- civilians will flock to the player ship
-    void flock(scene_node *ship_node, scene_node *flock_target){
-        
-      vec3 distanceVector = flock_target->get_position() - ship_node->get_position();
+    //flock to a target -- civilians will flock to the player ship (proceded by leader following)
+    void flock(scene_node *ship_node, scene_node *flock_target, float acceleration){
+
+      vec3 thetaVelocity = flock_target->get_z() * -1.0f; //inverse the velocity vector
+      thetaVelocity = normalize(thetaVelocity) * 10.0f; // normalize a scale by distance float
+      vec3 followBehind = thetaVelocity + flock_target->get_position(); //make it relative (add to character pos)
+
+      vec3 distanceVector = followBehind - ship_node->get_position();
       float angle = angle_to_target(distanceVector.x(), distanceVector.z());
       rotate(ship_node, angle);
+      accelerate(ship_node, acceleration);
     }
 
     void rotate(scene_node *ship_node, float angle){

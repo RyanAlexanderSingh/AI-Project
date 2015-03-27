@@ -23,9 +23,6 @@ namespace octet {
     GLfloat vertex_data[722];
     GLuint vertices;
 
-    color_shader shader;
-
-
   public:
     ships(){}
 
@@ -33,37 +30,45 @@ namespace octet {
       this->the_app = app;
       this->app_scene = vs;
 
-      shader.init();
-      
       //create basic default circle to work with
       for (int i = 0; i < 720; i += 3) {
         vertex_data[i] = (cos((PI * (i / 2) / 180.0f)) * 1); //x pos
         vertex_data[i + 1] = 0.0f; // y pos (we don't need this)
         vertex_data[i + 2] = (sin((PI * (i / 2) / 180.0f)) * 1); //z pos
       }
-
     }
 
-    void update_agro_circle(scene_node *ship, scene_node *player_ship, float angle){
+    void statusCircle(float lineWidth, float radius, scene_node *ship = NULL, scene_node *player_ship = NULL, float angle = NULL){
 
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
-      vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
-      mat4t rotation;
-      rotation.loadIdentity();
-      rotation.rotateY(angle * (180.0f / PI));
-      distanceVec = rotation.rmul(distanceVec);
-
       GLfloat relative_vertex_data[722];
-      for (int i = 0; i < 720; i += 3){
-        relative_vertex_data[i] = (vertex_data[i] * 20.0f) + distanceVec.x();
-        relative_vertex_data[i + 1] = vertex_data[i + 1] + distanceVec.y(); // y pos (we don't need this)
-        relative_vertex_data[i + 2] = (vertex_data[i + 2] * 20.0f) + distanceVec.z(); //z pos
+
+      //if we're drawing relative to the player...
+      if (!ship == NULL){
+        vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
+        mat4t rotation;
+        rotation.loadIdentity();
+        rotation.rotateY(angle * (180.0f / PI));
+        distanceVec = rotation.rmul(distanceVec);
+
+        for (int i = 0; i < 720; i += 3){
+          relative_vertex_data[i] = (vertex_data[i] * radius) + distanceVec.x();
+          relative_vertex_data[i + 1] = vertex_data[i + 1] + distanceVec.y(); // y pos (we don't need this)
+          relative_vertex_data[i + 2] = (vertex_data[i + 2] * radius) + distanceVec.z(); //z pos
+        }
+      }
+      //if we're the player...just draw on us
+      else{
+        for (int i = 0; i < 720; i += 3){
+          relative_vertex_data[i] = (vertex_data[i] * radius);
+          relative_vertex_data[i + 1] = vertex_data[i + 1]; // y pos (we don't need this)
+          relative_vertex_data[i + 2] = (vertex_data[i + 2] * radius); //z pos
+        }
       }
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(relative_vertex_data), relative_vertex_data, GL_STATIC_DRAW);
-
       /// allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
 
@@ -75,45 +80,7 @@ namespace octet {
 
       // tell OpenGL what kind of vertices we have
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-      // draw a triangle
-      glLineWidth(1.0f);
-      glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-      glDrawArrays(GL_LINE_LOOP, 0, 239);
-    }
-    
-    void update_radius(scene_node *ship, scene_node *player_ship, float angle, float lineWidth){
-
-      glGenBuffers(1, &vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      vec4 distanceVec = vec4(ship->get_position() - player_ship->get_position(), 0);
-      mat4t rotation;
-      rotation.loadIdentity();
-      rotation.rotateY(angle * (180.0f / PI));
-      distanceVec = rotation.rmul(distanceVec);
-
-      GLfloat relativeVertexData[722];
-      for (int i = 0; i < 720; i += 3){
-        relativeVertexData[i] = (vertex_data[i] * 30.0f) + distanceVec.x();
-        relativeVertexData[i + 1] = vertex_data[i + 1] + distanceVec.y();  // y pos (we don't need this)
-        relativeVertexData[i + 2] = (vertex_data[i + 2] * 30.0f) + distanceVec.z(); //z pos
-      }
-
-      glBufferData(GL_ARRAY_BUFFER, sizeof(relativeVertexData), relativeVertexData, GL_STATIC_DRAW);
-      
-      // allow Z buffer depth testing (closer objects are always drawn in front of far ones)
-      glEnable(GL_DEPTH_TEST);
-
-      // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
-      glEnableVertexAttribArray(0);
-
-      // use the buffer we made earlier.
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
       glLineWidth(lineWidth);
-      // draw a circle
       glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
       glDrawArrays(GL_LINE_LOOP, 0, 239);
     }
@@ -168,8 +135,9 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/ships/civilianship_uv.jpg"));
 
-      float rand_x = float(rand() % 200 + -200);
-      float rand_z = float(rand() % 200 + -200);
+
+      float rand_x = float(rand() % 290 + -290);
+      float rand_z = float(rand() % 290 + -200);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
@@ -189,8 +157,8 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/ships/mercship_uv.jpg"));
       //get some random numbers for x and z pos
-      float rand_x = float(rand() % 200 + -200);
-      float rand_z = float(rand() % 200 + -200);
+      float rand_x = float(rand() % 290 + -100);
+      float rand_z = float(rand() % 290 + -200);
       printf("Random number: %f\n", rand_x);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
