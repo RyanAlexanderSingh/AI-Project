@@ -154,8 +154,8 @@ namespace octet {
     //Basic flee behaviours, the opposite of seek
     void flee(scene_node *ship_node, scene_node *enemy){
 
-      vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
-      float angle = angle_to_target(oppositeVec.x(), oppositeVec.z());
+      vec3 DesiredVelocity = ship_node->get_position() - enemy->get_position();
+      float angle = angle_to_target(DesiredVelocity.x(), DesiredVelocity.z());
       rotate(ship_node, angle);
       accelerate(ship_node, 5.0f);
     }
