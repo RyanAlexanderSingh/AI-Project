@@ -22,6 +22,7 @@ namespace octet {
     ref<scene_node> ship_node;
 
     const float sq_agro_range = 35.0*35.0f;
+    const float sq_capture_range = 5.0f*5.0f;
     const float sq_flee_range = 35.0*35.0f;
     const float speed = 2.0f;
 
@@ -45,46 +46,58 @@ namespace octet {
       state = WANDERING; //lets set a default for the mercs
     }
 
-    void update(dynarray<scene_node*> civilians, scene_node *boss, scene_node *player_ship, float angle = 0){
-      state = WANDERING;
-      float lineWidth = 1.0f;
-      //activate bullet physics
-      ship_node->activate();
-      ship_node->set_damping(0.5f, 0.5f);
-      ship_node->set_friction(1.0f);
+    void deactive_ship(){
+      state = DEAD;
+    }
 
-      for (unsigned i = 0; i < civilians.size() && state != TARGETING; ++i){
-        //probably not the best way, think about putting this in a struct
-        vec3 civilian_position = civilians[i]->get_position();
-        vec3 distanceVec = civilian_position - ship_node->get_position();
-        //check if its within the range to run away from them
-        if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
-          state = TARGETING;
-          ai.seek(ship_node, civilians[i], 7.0f);
+    void update(dynarray<civilian_ship*> civilians, scene_node *boss, scene_node *player_ship, float angle = 0){
+      if (state != DEAD){
+        state = WANDERING;
+        float lineWidth = 1.0f;
+        //activate bullet physics
+        ship_node->activate();
+        ship_node->set_damping(0.5f, 0.5f);
+        ship_node->set_friction(1.0f);
+
+        for (unsigned i = 0; i < civilians.size() && state != TARGETING; ++i){
+          scene_node *civilianSceneNode = civilians[i]->return_ship_node();
+          //probably not the best way, think about putting this in a struct
+          vec3 civilian_position = civilianSceneNode->get_position();
+          vec3 distanceVec = civilian_position - ship_node->get_position();
+          //check if its within the range to run away from them
+          if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
+            if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range){
+              civilians[i]->deactive_ship();
+            }
+            else{
+              state = TARGETING;
+              ai.seek(ship_node, civilianSceneNode, 7.0f);
+            }
+          }
         }
+        //the mercs will flee from the boss (perhaps add a randomization on this)
+        vec3 distanceVec = boss->get_position() - ship_node->get_position();
+        if ((distanceVec.x()*distanceVec.x() + distanceVec.z() * distanceVec.z() < sq_flee_range) && state != TARGETING){
+          state = FLEEING;
+          ai.flee(ship_node, boss);
+        }
+        //default behaviour, lets just let it wandering around
+        if (state == WANDERING){
+          ai.wander(ship_node, speed);
+        }
+        switch (state){
+        case WANDERING:
+          lineWidth = 1.0f;
+          break;
+        case FLEEING:
+          lineWidth = 2.0f;
+          break;
+        case TARGETING:
+          lineWidth = 2.0f;
+          break;
+        }
+        mercenarySpaceShip.statusCircle(lineWidth, 20.0f, ship_node, player_ship, angle);
       }
-      //the mercs will flee from the boss (perhaps add a randomization on this)
-      vec3 distanceVec = boss->get_position() - ship_node->get_position();
-      if ((distanceVec.x()*distanceVec.x() + distanceVec.z() * distanceVec.z() < sq_flee_range) && state != TARGETING){
-        state = FLEEING;
-        ai.flee(ship_node, boss);
-      }
-      //default behaviour, lets just let it wandering around
-      if (state == WANDERING){
-        ai.wander(ship_node, speed);
-      }
-      switch (state){
-      case WANDERING:
-        lineWidth = 1.0f;
-        break;
-      case FLEEING:
-        lineWidth = 2.0f;
-        break;
-      case TARGETING:
-        lineWidth = 2.0f;
-        break;
-      }
-      mercenarySpaceShip.statusCircle(lineWidth, 20.0f, ship_node, player_ship, angle);
     }
 
     ~merc_ship() {

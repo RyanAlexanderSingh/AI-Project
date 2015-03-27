@@ -22,8 +22,6 @@ namespace octet {
     const float sq_flocking_range = 30.0f*30.0f;
     const float sq_following_range = 10.0f*10.0f;
     float acceleration = 0.0f;
-    //are these civilian ships active?
-    bool active = true;
 
     enum civilianState { FLEEING, WANDERING, FLOCKING, LEADER_FOLLOWING, DEAD }; //the different states the civilians can be in
     civilianState state; //create a new state
@@ -46,7 +44,6 @@ namespace octet {
 
     //bad way of deactivating the ship
     void deactive_ship(){
-      active = false;
       state = DEAD;
     }
 

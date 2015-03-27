@@ -48,7 +48,7 @@ namespace octet {
       state = DEAD;
     }
 
-    void update(dynarray<civilian_ship*> civilians, dynarray<scene_node*> enemies, scene_node *player_ship, float player_orientation){
+    void update(dynarray<civilian_ship*> civilians, dynarray<merc_ship*> enemies, scene_node *player_ship, float player_orientation){
       //activate bullet physics
       if (state != DEAD){
         state = WANDERING; //default behaviour
@@ -64,7 +64,7 @@ namespace octet {
           //if the civilians are within the agro range
           if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range){
             int attackChance = rand() % 100 + 1;
-            if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range && attackChance >= 70){
+            if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range && attackChance >= 60){
               printf("Attack Chance: %i\n", attackChance);
               state = DESTROY;
               //do something here to destroy the civilians 
@@ -75,28 +75,40 @@ namespace octet {
               ai.seek(ship_node, civilianSceneNode, 8.0f);
             }
           }
+          for (unsigned i = 0; i < enemies.size() - 1; ++i){
+            scene_node *mercSceneNode = enemies[i]->return_ship_node();
+            vec3 distanceVec = mercSceneNode->get_position() - ship_node->get_position();
+            //if the mercs are in agro range -- > we dont like mercs as much so higher rate of death
+            if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range){
+              int attackChance = rand() % 100 - 1;
+              if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range && attackChance >= 30){
+                state == DESTROY;
+                enemies[i]->
+              }
+            }
+          }
         }
-        if (state == WANDERING){
-          ai.wander(ship_node);
-        }
-        switch (state){
-        case WANDERING:
-          lineWidth = 1.0f;
-          break;
-        case SEEKING:
-          lineWidth = 2.0f;
-          break;
-        }
-        bossSpaceShip.statusCircle(lineWidth, 40.0f, ship_node, player_ship, player_orientation);
+      if (state == WANDERING){
+        ai.wander(ship_node);
       }
-      else if(state == DEAD){
+      switch (state){
+      case WANDERING:
+        lineWidth = 1.0f;
+        break;
+      case SEEKING:
+        lineWidth = 2.0f;
+        break;
+      }
+      bossSpaceShip.statusCircle(lineWidth, 40.0f, ship_node, player_ship, player_orientation);
+    }
+      else if (state == DEAD){
         ship_node->set_position(vec3(500.0f, 0.0f, 500.0f));
       }
-    }
+  }
 
-    ~boss_ship() {
-    }
-  };
+  ~boss_ship() {
+  }
+};
 }
 
 #endif
