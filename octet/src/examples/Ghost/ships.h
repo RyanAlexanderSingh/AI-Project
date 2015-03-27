@@ -116,8 +116,10 @@ namespace octet {
 
       mesh *enemy_mesh = dict.get_mesh("StarShip-lib+blinn1");
       material *mat = new material(new image("assets/ships/bossship_uv.jpg"));
+      float rand_x = float(rand() % 1000 + -500);
+      float rand_z = float(rand() % 1000 + -500);
       mat4t enemy_location;
-      enemy_location.translate(vec3(0.0f, 0.0f, 0.0f));
+      enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
 
       return app_scene->get_mesh_instance(app_scene->get_num_mesh_instances() - 1)->get_node();
@@ -135,9 +137,8 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/ships/civilianship_uv.jpg"));
 
-
-      float rand_x = float(rand() % 290 + -290);
-      float rand_z = float(rand() % 290 + -200);
+      float rand_x = float(rand() % 1000 + -500);
+      float rand_z = float(rand() % 1000 + -500);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);
@@ -157,9 +158,8 @@ namespace octet {
       mesh *enemy_mesh = dict.get_mesh("pCube3-lib+blinn1");
       material *mat = new material(new image("assets/ships/mercship_uv.jpg"));
       //get some random numbers for x and z pos
-      float rand_x = float(rand() % 290 + -100);
-      float rand_z = float(rand() % 290 + -200);
-      printf("Random number: %f\n", rand_x);
+      float rand_x = float(rand() % 1000 + -500);
+      float rand_z = float(rand() % 1000 + -500);
       mat4t enemy_location;
       enemy_location.translate(vec3(rand_x, 0.0f, rand_z));
       app_scene->add_shape(enemy_location, enemy_mesh, mat, false);

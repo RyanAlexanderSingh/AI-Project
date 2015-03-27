@@ -24,7 +24,7 @@ namespace octet {
     const float sq_agro_range = 35.0*35.0f;
     const float sq_capture_range = 5.0f*5.0f;
     const float sq_flee_range = 35.0*35.0f;
-    const float speed = 2.0f;
+    const float speed = 15.0f;
 
     //the different states of the mercs
     enum mercState { TARGETING, FLEEING, WANDERING, DEAD };
@@ -107,6 +107,10 @@ namespace octet {
         }
         mercenarySpaceShip.statusCircle(lineWidth, 20.0f, ship_node, player_ship, angle);
       }
+      else if (state == DEAD){
+        ship_node->set_position(vec3(8000.0f, 0.0f, 8000.0f));
+      }
+
     }
 
     ~merc_ship() {

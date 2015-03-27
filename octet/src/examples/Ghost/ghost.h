@@ -22,7 +22,7 @@ namespace octet {
 
     //arrays to store the NPC's
     dynarray<merc_ship*> merc_array;
-    ref<boss_ship> boss_enemy;
+    dynarray<boss_ship*> boss_array;
     //our array for storing all of the enemies
     dynarray<scene_node*> enemies;
 
@@ -74,23 +74,26 @@ namespace octet {
       ai->init(); //essentially just creating the random seed
 
       //skybox
-      //create_skybox();
+      create_skybox();
 
       //create the merc enemy ships
-      for (int i = 0; i < 5; ++i){
+      for (int i = 0; i < 10; ++i){
         merc_ship *merc = new merc_ship();
         merc->init(this, app_scene);
         merc_array.push_back(merc);
         enemies.push_back(merc->return_ship_node());  //lets add the enemies to the array so we can check all enemies
       }
 
-      //create the boss ship
-      boss_enemy = new boss_ship();
-      boss_enemy->init(this, app_scene);
-      enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
+      //create the boss ships
+      for (int i = 0; i < 3; ++i){
+        boss_ship *boss_enemy = new boss_ship();
+        boss_enemy->init(this, app_scene);
+        boss_array.push_back(boss_enemy);
+        enemies.push_back(boss_enemy->return_ship_node()); //lets add the enemies to the array so we can check all enemies
+      }
 
       //create the civilian ships
-      for (int i = 0; i < 20; ++i){
+      for (int i = 0; i < 40; ++i){
         civilian_ship *civilian = new civilian_ship();
         civilian->init(this, app_scene); //let the civilians know who the enemies are 
         civilians.push_back(civilian->return_ship_node());
@@ -114,14 +117,17 @@ namespace octet {
       player.update();
       //update the enemies
       int deadBoss = 0, deadCivilians = 0, freedCivilians = 0, deadMercs = 0;
-      boss_enemy->update(civilian_array, merc_array, player_node, player.get_orientation());
+      for (unsigned i = 0; i < boss_array.size(); ++i){
+        boss_array[i]->update(civilian_array, merc_array, player_node, player.get_orientation());
       //bad way of doing things but lets just see if its dead
-      if (boss_enemy->active_state() == false) ++deadBoss;
+        if (boss_array[i]->active_state() == false) ++deadBoss;
+      }
+   
 
       //update the mercs
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
-        merc_array[i]->update(civilian_array, enemies[enemies.size() - 1], player_node, player.get_orientation());
+        merc_array[i]->update(civilian_array, enemies[enemies.size() - 3], player_node, player.get_orientation());
         if (merc_array[i]->active_state() == false) ++deadMercs;
       }
 
@@ -143,9 +149,9 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
 
-      /*scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
+      scene_node *skybox = app_scene->get_mesh_instance(2)->get_node();
        skybox->rotate(0.003f, vec3(1, 0, 0));
-       skybox->rotate(0.003f, vec3(0, 1, 0));*/
+       skybox->rotate(0.003f, vec3(0, 1, 0));
     }
   };
 }

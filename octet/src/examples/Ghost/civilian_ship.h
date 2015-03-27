@@ -78,11 +78,15 @@ namespace octet {
         if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_flocking_range){
           //if hes already within range and hes within range to follow, let it follow but now he has no control
           if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_following_range){
-            set_free = true; //set the ship free
-            ship_node->set_position(vec3(1000.0f, 0.0f, 1000.0f));
+            if (the_app->is_key_going_down(' ')){
+              set_free = true; //set the ship free
+              ship_node->set_position(vec3(8000.0f, 0.0f, 8000.0f));
+            }
+            ai.flock(ship_node, player);
           }
           else{
             state = FLOCKING; //flock but he might still try and escape
+            ai.flock(ship_node, player);
           }
           ai.flock(ship_node, player);
         }

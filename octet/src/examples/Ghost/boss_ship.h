@@ -63,7 +63,7 @@ namespace octet {
         state = WANDERING; //default behaviour
         float lineWidth = 1.0f;
         ship_node->activate();
-        ship_node->set_damping(0.5f, 0.5f);
+        ship_node->set_damping(0.6f, 0.5f);
         ship_node->set_friction(1.0f);
 
         //check the civilians, the boss is nicer to the civilians but he'll still probably kill them
@@ -96,7 +96,7 @@ namespace octet {
               }
               else{
                 state = SEEKING;
-                ai.seek(ship_node, mercSceneNode, 8.0f);
+                ai.seek(ship_node, mercSceneNode, 3.0f);
               }
             }
           }

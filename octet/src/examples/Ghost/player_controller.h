@@ -22,7 +22,7 @@ namespace octet {
     ref<scene_node> the_camera;
 
     float ship_orientation = 0.0f;
-    const float acceleration = 10.0f;
+    const float acceleration = 50.0f;
     const float angle_iteration = 0.03f;
     bool alternate_camera = true;
 
@@ -53,7 +53,7 @@ namespace octet {
 
       update_camera();
       player_node->set_damping(0.5f, 0.0f);
-      player_node->clamp_linear_velocity(30);
+      player_node->clamp_linear_velocity(50);
 
       float friction = 0.0f;
       if (the_app->is_key_down('A')) {
@@ -109,7 +109,7 @@ namespace octet {
       }
       //above ship
       else{
-        the_camera->translate(vec3(0.0f, 300.0f, 0.0f));
+        the_camera->translate(vec3(0.0f, 600.0f, 0.0f));
         the_camera->access_nodeToParent().rotateY(180.0f);
         the_camera->access_nodeToParent().rotateX(-90.0f);
       }
