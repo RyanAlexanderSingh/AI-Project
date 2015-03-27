@@ -81,7 +81,6 @@ namespace octet {
         merc_array.push_back(merc);
         enemies.push_back(merc->return_ship_node());  //lets add the enemies to the array so we can check all enemies
       }
-
       
       //create the boss ship
       boss_enemy = new boss_ship();
@@ -112,10 +111,10 @@ namespace octet {
       player.update();
       //update the enemies
 
-      boss_enemy->update(civilians, enemies, player_node, player.get_orientation());
+      boss_enemy->update(civilian_array, enemies, player_node, player.get_orientation());
       for (unsigned i = 0; i < merc_array.size(); ++i){
         //lets get the civilian scene nodes
-        merc_array[i]->update(civilians, player_node, player.get_orientation());
+        merc_array[i]->update(civilians, enemies[enemies.size() - 1], player_node, player.get_orientation());
       }
       //update the civilians
       for (unsigned i = 0; i < civilian_array.size(); ++i){

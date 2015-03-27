@@ -16,8 +16,8 @@
 #include "ai_behaviours.h"
 #include "player_controller.h"
 #include "civilian_ship.h"
-#include "boss_ship.h"
 #include "merc_ship.h"
+#include "boss_ship.h"
 #include "ghost.h"
 
 

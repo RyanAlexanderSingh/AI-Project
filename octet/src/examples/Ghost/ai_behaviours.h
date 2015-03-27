@@ -80,13 +80,13 @@ namespace octet {
     }
 
     //Basic seek behaviours (change to arrive)
-    void seek(scene_node *ship_node, scene_node *target_ship){
+    void seek(scene_node *ship_node, scene_node *target_ship, float speed = 4.0f){
       //get the distance vector to the target
       vec3 distanceVector = target_ship->get_position() - ship_node->get_position();
       //rotate to angle
       float angle = angle_to_target(distanceVector.x(), distanceVector.z());
       rotate(ship_node, angle);
-      accelerate(ship_node, 4.0f);
+      accelerate(ship_node, speed);
     }
 
     //Basic flee behaviours, the opposite of seek
@@ -95,16 +95,7 @@ namespace octet {
       vec3 oppositeVec = ship_node->get_position() - enemy->get_position();
       float angle = angle_to_target(oppositeVec.x(), oppositeVec.z());
       rotate(ship_node, angle);
-      accelerate(ship_node, 10.0f);
-    }
-
-    //Capture function. The ships will chase and capture civilians
-    void capture(scene_node *ship_node, scene_node *target_node){
-
-      vec3 distanceVector = target_node->get_position() - ship_node->get_position();
-      float angle = angle_to_target(distanceVector.x(), distanceVector.z());
-      rotate(ship_node, angle);
-      accelerate(ship_node, 3.0f);
+      accelerate(ship_node, 5.0f);
     }
 
     //flock to a target -- civilians will flock to the player ship (proceded by leader following)

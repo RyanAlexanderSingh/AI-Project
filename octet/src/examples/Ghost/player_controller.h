@@ -66,7 +66,7 @@ namespace octet {
         player_node->apply_central_force(player_node->get_z() * (acceleration));
       }
       else if (the_app->is_key_down('S')) {
-        player_node->apply_central_force(player_node->get_z() * (acceleration));
+        player_node->apply_central_force(player_node->get_z() * (-acceleration));
       }
       else if (the_app->is_key_down('Q')) {
         player_node->activate();

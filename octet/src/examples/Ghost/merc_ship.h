@@ -26,7 +26,7 @@ namespace octet {
     const float speed = 2.0f;
 
     //the different states of the mercs
-    enum mercState {TARGETING, FLEEING, WANDERING};
+    enum mercState { TARGETING, FLEEING, WANDERING, DEAD };
     mercState state;
 
   public:
@@ -45,9 +45,9 @@ namespace octet {
       state = WANDERING; //lets set a default for the mercs
     }
 
-    void update(dynarray<scene_node*> civilians, scene_node *player_ship, float angle = 0){
-      mercenarySpaceShip.statusCircle(2.0f, 20.0f, ship_node, player_ship, angle);
+    void update(dynarray<scene_node*> civilians, scene_node *boss, scene_node *player_ship, float angle = 0){
       state = WANDERING;
+      float lineWidth = 1.0f;
       //activate bullet physics
       ship_node->activate();
       ship_node->set_damping(0.5f, 0.5f);
@@ -59,15 +59,34 @@ namespace octet {
         vec3 distanceVec = civilian_position - ship_node->get_position();
         //check if its within the range to run away from them
         if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
-          ai.seek(ship_node, civilians[i]);
           state = TARGETING;
-        }
-        //default behaviour, lets just let it wandering around
-        if (state == WANDERING){
-          //ai.wander(ship_node, speed);
+          ai.seek(ship_node, civilians[i], 7.0f);
         }
       }
+      //the mercs will flee from the boss (perhaps add a randomization on this)
+      vec3 distanceVec = boss->get_position() - ship_node->get_position();
+      if ((distanceVec.x()*distanceVec.x() + distanceVec.z() * distanceVec.z() < sq_flee_range) && state != TARGETING){
+        state = FLEEING;
+        ai.flee(ship_node, boss);
+      }
+      //default behaviour, lets just let it wandering around
+      if (state == WANDERING){
+        ai.wander(ship_node, speed);
+      }
+      switch (state){
+      case WANDERING:
+        lineWidth = 1.0f;
+        break;
+      case FLEEING:
+        lineWidth = 2.0f;
+        break;
+      case TARGETING:
+        lineWidth = 2.0f;
+        break;
+      }
+      mercenarySpaceShip.statusCircle(lineWidth, 20.0f, ship_node, player_ship, angle);
     }
+
     ~merc_ship() {
     }
   };
