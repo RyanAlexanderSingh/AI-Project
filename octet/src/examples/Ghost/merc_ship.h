@@ -48,6 +48,16 @@ namespace octet {
 
     void deactive_ship(){
       state = DEAD;
+      ai.mercsDead();
+    }
+
+    bool active_state(){
+      if (state == DEAD){
+        return false;
+      }
+      else {
+        return true;
+      }
     }
 
     void update(dynarray<civilian_ship*> civilians, scene_node *boss, scene_node *player_ship, float angle = 0){
@@ -68,6 +78,7 @@ namespace octet {
           if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
             if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range){
               civilians[i]->deactive_ship();
+              printf("FREED");
             }
             else{
               state = TARGETING;

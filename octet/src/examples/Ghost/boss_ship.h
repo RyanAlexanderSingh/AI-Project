@@ -48,6 +48,15 @@ namespace octet {
       state = DEAD;
     }
 
+    bool active_state(){
+      if (state == DEAD){
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+
     void update(dynarray<civilian_ship*> civilians, dynarray<merc_ship*> enemies, scene_node *player_ship, float player_orientation){
       //activate bullet physics
       if (state != DEAD){
@@ -82,12 +91,17 @@ namespace octet {
             if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range){
               int attackChance = rand() % 100 - 1;
               if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range && attackChance >= 30){
-                state == DESTROY;
-                enemies[i]->
+                state = DESTROY;
+                enemies[i]->deactive_ship();
+              }
+              else{
+                state = SEEKING;
+                ai.seek(ship_node, mercSceneNode, 8.0f);
               }
             }
           }
         }
+
       if (state == WANDERING){
         ai.wander(ship_node);
       }
