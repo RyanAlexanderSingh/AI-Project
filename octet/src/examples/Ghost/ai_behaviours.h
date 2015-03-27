@@ -160,7 +160,7 @@ namespace octet {
       accelerate(ship_node, 5.0f);
     }
 
-    //flock to a target -- civilians will flock to the player ship (proceded by leader following)
+    //flock to a target -- civilians will flock to the player ship (proceded by leader following...to add later)
     void flock(scene_node *ship_node, scene_node *flock_target){
 
       vec3 thetaVelocity = flock_target->get_z() * -1.0f; //inverse the velocity vector
