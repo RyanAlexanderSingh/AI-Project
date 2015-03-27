@@ -48,7 +48,6 @@ namespace octet {
 
     void deactive_ship(){
       state = DEAD;
-      ai.mercsDead();
     }
 
     bool active_state(){
@@ -78,7 +77,6 @@ namespace octet {
           if ((distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_agro_range)){
             if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_capture_range){
               civilians[i]->deactive_ship();
-              printf("FREED");
             }
             else{
               state = TARGETING;

@@ -65,7 +65,7 @@ namespace octet {
     //civilian ships are scared of everything except the player
     void update(dynarray<scene_node*> enemies, scene_node *player, float player_orientation){
       //check if the ship is active -> if its not, we'll pool it and place it elsewhere for the time being
-      if (state != DEAD || !set_free){
+      if (state != DEAD){
         state = WANDERING;
         float lineWidth = 1.0f; //default size of glLines
         //activate bullet physics
@@ -79,7 +79,7 @@ namespace octet {
           //if hes already within range and hes within range to follow, let it follow but now he has no control
           if (distanceVec.x()*distanceVec.x() + distanceVec.z()*distanceVec.z() < sq_following_range){
             set_free = true; //set the ship free
-            ship_node->set_position(vec3(500.0f, 0.0f, 500.0f));
+            ship_node->set_position(vec3(1000.0f, 0.0f, 1000.0f));
           }
           else{
             state = FLOCKING; //flock but he might still try and escape
@@ -114,11 +114,10 @@ namespace octet {
         if (!set_free){
           civilianSpaceShip.statusCircle(lineWidth, 30.0f, ship_node, player, player_orientation);
         }
-        printf("STATE: %i", state);
       }
       //if its not active, its state is 'destroyed' / dead
       else if (state == DEAD){
-        ship_node->set_position(vec3(500.0f, 0.0f, 500.0f));
+        ship_node->set_position(vec3(1000.0f, 0.0f, 1000.0f));
       }
     }
 
